@@ -9,12 +9,15 @@ jobs:
   update-server:
     runs-on: ubuntu-latest
     steps:
-    - name: ssh
-      run: |
-        sudo apt install sshpass -y || apt install sshpass -y
-        sshpass -p "${{ secrets.SSH_PASS }}" ssh -tt -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }} 
-        cd ~/COP4710-Caregiver || git clone https://github.com/kinneyan/COP4710-Caregiver.git
-        git pull
-        mv * /var/www/html
+    - name: update-server
+      uses: matheusvanzan/sshpass-action@v2
+      with:
+        host: ${{ secrets.SSH_IP }}
+        user: ${{ secrets.SSH_USER }}
+        pass: ${{ secrets.SSH_PASSWORD }}
+        run: |
+          cd ~/COP4710-Caregiver || git clone https://github.com/kinneyan/COP4710-Caregiver.git
+          git pull
+          mv * /var/www/html
       
   
