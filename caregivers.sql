@@ -1,0 +1,75 @@
+CREATE TABLE `users` (
+	`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
+	`username` VARCHAR(255) NOT NULL UNIQUE,
+	`password` VARCHAR(255) NOT NULL,
+	`email` VARCHAR(255) NOT NULL UNIQUE,
+	`fname` VARCHAR(255) NOT NULL,
+	`lname` VARCHAR(255) NOT NULL,
+	`address` VARCHAR(255),
+	`phone` VARCHAR(255),
+	`balance` DECIMAL DEFAULT 2000,
+	`available_hours` DECIMAL,
+	`date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`last_login_date` DATETIME,
+	PRIMARY KEY(`id`, `username`)
+);
+
+
+CREATE TABLE `recipients` (
+	`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
+	`user_id` INTEGER NOT NULL,
+	`fname` VARCHAR(255),
+	`lname` VARCHAR(255),
+	`age` INTEGER,
+	`notes` VARCHAR(255),
+	`date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY(`id`)
+);
+
+
+CREATE TABLE `contracts` (
+	`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
+	`caregiver_id` INTEGER NOT NULL,
+	`hiring_user_id` INTEGER NOT NULL,
+	`recipient_id` INTEGER NOT NULL,
+	`start_date` DATE,
+	`end_date` DATE,
+	`daily_hours` DECIMAL,
+	`rate` DECIMAL DEFAULT 30,
+	`contract_total` DECIMAL,
+	`approved` BOOLEAN NOT NULL,
+	`approved_date` DATETIME,
+	`date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY(`id`)
+);
+
+
+CREATE TABLE `reviews` (
+	`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
+	`contract_id` INTEGER NOT NULL,
+	`user_id` INTEGER NOT NULL,
+	`rating` DECIMAL,
+	`notes` VARCHAR(255),
+	`date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY(`id`)
+);
+
+
+ALTER TABLE `recipients`
+ADD FOREIGN KEY(`user_id`) REFERENCES `users`(`id`)
+ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE `contracts`
+ADD FOREIGN KEY(`caregiver_id`) REFERENCES `users`(`id`)
+ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE `contracts`
+ADD FOREIGN KEY(`hiring_user_id`) REFERENCES `users`(`id`)
+ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE `contracts`
+ADD FOREIGN KEY(`recipient_id`) REFERENCES `recipients`(`id`)
+ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE `reviews`
+ADD FOREIGN KEY(`contract_id`) REFERENCES `contracts`(`id`)
+ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE `reviews`
+ADD FOREIGN KEY(`user_id`) REFERENCES `users`(`id`)
+ON UPDATE NO ACTION ON DELETE NO ACTION;
