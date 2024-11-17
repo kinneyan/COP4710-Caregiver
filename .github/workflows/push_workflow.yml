@@ -12,7 +12,7 @@ jobs:
     - name: ssh
       run: |
         sudo apt install sshpass -y || apt install sshpass -y
-        sshpass -p "{{secrets.SSH_pass}}" ssh {{secrets.SSH_USER}}@{{secrets.SSH_IP}} 
+        sshpass -p "${{ secrets.SSH_PASS }}" ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_IP }} 
         cd ~/COP4710-Caregiver || git clone https://github.com/kinneyan/COP4710-Caregiver.git
         git pull
         mv * /var/www/html
