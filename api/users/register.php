@@ -21,7 +21,6 @@
         $stmt->bind_param("s", $data["username"]);
         $stmt->execute();
         $result = $stmt->get_result();
-        $stmt->close();
         
 
         while ($row = $result->fetch_assoc()) {
@@ -31,6 +30,8 @@
                 $unique = false;
             }
         }
+
+        $stmt->close();
 
         if ($unique) {
 
@@ -63,6 +64,8 @@
         } else {
             returnWithVerdict("username was taken");
         }
+
+        $conn->close();
 
     }
 
