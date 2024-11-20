@@ -17,8 +17,8 @@
     }
 
     // Database connection
-    // $conn = new mysqli("localhost", "kinneyan", "test", "caregivers");
-    $conn = new mysqli("localhost", "root", "AlpBet2002", "caregivers");
+    $conn = new mysqli("localhost", "kinneyan", "test", "caregivers");
+    // $conn = new mysqli("localhost", "root", "AlpBet2002", "caregivers");
 
     if ($conn->connect_error) {
         returnWithError("Connection Error: " . $conn->connect_error);

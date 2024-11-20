@@ -5,8 +5,8 @@
 
     $data = json_decode(file_get_contents('php://input'), true);
 
-    // $conn = new mysqli("localhost", "kinneyan", "test", "caregivers");
-    $conn = new mysqli("localhost", "root", "AlpBet2002", "caregivers");
+    $conn = new mysqli("localhost", "kinneyan", "test", "caregivers");
+    // $conn = new mysqli("localhost", "root", "AlpBet2002", "caregivers");
 
     if ($conn->connect_error) {
         returnWithVerdict("Connection Error: " . $conn->connect_error);
