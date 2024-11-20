@@ -6,7 +6,6 @@
     $data = json_decode(file_get_contents('php://input'), true);
 
     $conn = new mysqli("localhost", "kinneyan", "test", "caregivers");
-    // $conn = new mysqli("localhost", "root", "AlpBet2002", "caregivers");
 
     if ($conn->connect_error) {
         returnWithVerdict("Connection Error: " . $conn->connect_error);
@@ -46,7 +45,7 @@
     $stmt2->bind_param(
         "ssssssdi",
         $data['username'],
-        $data['password'], // NOTE: Consider hashing the password for security
+        $data['password'],
         $data['email'],
         $data['firstName'],
         $data['lastName'],
