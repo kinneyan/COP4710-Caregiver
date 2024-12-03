@@ -20,6 +20,7 @@ CREATE TABLE `recipients` (
 	`user_id` INTEGER NOT NULL,
 	`fname` VARCHAR(255),
 	`lname` VARCHAR(255),
+	`address` VARCHAR(255),
 	`age` INTEGER,
 	`notes` VARCHAR(255),
 	`date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
