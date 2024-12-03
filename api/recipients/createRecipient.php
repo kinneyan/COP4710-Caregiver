@@ -12,15 +12,15 @@
         exit();
     }
 
-    if (empty($data['user_id']) || empty($data['fname']) || empty($data['lname']) || empty($data['age'])) {
-        sendErrorResponse("Missing required fields: user_id, fname, lname, and age are mandatory.");
+    if (empty($data['user_id']) || empty($data['fname']) || empty($data['lname']) || empty($data['age']) || empty($data['address'])) {
+        sendErrorResponse("Missing required fields: user_id, fname, lname, age, and address are mandatory.");
         exit();
     }
 
     $notes = isset($data['notes']) ? $data['notes'] : null;
 
-    $stmt = $conn->prepare("INSERT INTO recipients (user_id, fname, lname, age, notes) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("issis", $data['user_id'], $data['fname'], $data['lname'], $data['age'], $notes);
+    $stmt = $conn->prepare("INSERT INTO recipients (user_id, fname, lname, age, address, notes) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ississ", $data['user_id'], $data['fname'], $data['lname'], $data['age'], $data['address'], $notes);
 
     if ($stmt->execute()) {
         sendSuccessResponse("Recipient created successfully.");
