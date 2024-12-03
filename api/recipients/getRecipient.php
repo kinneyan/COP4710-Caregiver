@@ -17,7 +17,7 @@
         exit();
     }
 
-    $stmt = $conn->prepare("SELECT id, user_id, fname, lname, age, address, notes FROM recipients WHERE id = ?");
+    $stmt = $conn->prepare("SELECT id, user_id, fname, lname, age, notes FROM recipients WHERE id = ?");
     $stmt->bind_param("i", $data['id']);
     $stmt->execute();
     $result = $stmt->get_result();

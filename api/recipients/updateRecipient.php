@@ -36,11 +36,6 @@
         $params[] = $data['age'];
         $types .= "i";
     }
-    if (isset($data['address'])) { // Added address field
-        $fields[] = "address = ?";
-        $params[] = $data['address'];
-        $types .= "s";
-    }
     if (isset($data['notes'])) {
         $fields[] = "notes = ?";
         $params[] = $data['notes'];
