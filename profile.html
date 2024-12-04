@@ -1,16 +1,29 @@
 <html>
 <head>
 <link rel="stylesheet" href="css/style.css">
-<script src="w3.js"></script>
+<script type="text/javascript" src="js/user.js"></script>
+<script type="text/javascript" src="js/cookie.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript"> document.addEventListener('DOMContentLoaded', function(){ getCookie();}, {once: true});</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="js/w3.js"></script>
+<script> user = getUser();
+	 recipientList = getRecipientsByUser(); 
+	 contractList = getContractsByUser();
+	 reviewList = getReviewsByCaregiver();
+</script>
+
 <style>
 ul {
   list-style-type: none;
 }
 </style>
+
 </head>
 <body>
+
 <div class="topnav">
-  <button class="navbutton" onclick="location.href='profile.html'" disabled>Profile</button>
+  <button class="navbutton" onclick="location.href='profile.html'">Profile</button>
   <button class="navbutton" onclick="location.href='search.html'">Search</button>
   <button class="navbutton" onclick="location.href='contract.html'">Contract</button>
 </div>
@@ -50,29 +63,22 @@ ul {
 
 
   <script>
-    var myObject= {"firstName" : "John", "lastName" : "Doe", "userID" : "0"};
-    w3.displayObject("name", myObject);
-
-    myObject = {"address" : "1234 Hamster Drive"};
-    w3.displayObject("address", myObject);
-
-    myObject = {"email" : "person@hamster.com", "phone" : "1234567890"};
-    w3.displayObject("contact", myObject);
-
-    myObject = {"balance" : "$2000", "availableHours" : "10", "dateCreated" : "12/12/2012", "lastLogin" : "12/12/2012"}
-    w3.displayObject("account", myObject);
+    w3.displayObject("name", user);
+    w3.displayObject("address", user);
+    w3.displayObject("contact", user);
+    w3.displayObject("account", user);
   </script>
 
   <h2>Your Care Recipients</h2>
-  <ul id="recipients"></ul>
+  <ul id="recipientlist">
+    <li w3-repeat="recipients"><a href="viewrecipient.html#{{userID}}"> <br>Recipient#{{userID}}</a><br>
+	{{firstName}} {{lastName}}<br>
+	{{address}}<br>
+	Age: {{age}}<br>
+	{{notes}}</li>
+  </ul>
   <script>
-    let data = ["Ma", "Pa"];
-    let list = document.getElementById("recipients");
-    for (i = 0; i < data.length; ++i) {
-      let li = document.createElement('li');
-      li.innerText = data[i];
-      list.appendChild(li);
-    }
+    w3.displayObject("recipientlist", recipientList); 
   </script>
   <br>
   <button class="navbutton" onclick="location.href='addrecipient.html'">Add Recipient</button>
@@ -80,49 +86,43 @@ ul {
   <br>
   <h2>Your Active Contracts</u2>
   <ul id="contractlist">
-    <li w3-repeat="contracts"><a href="viewcontract.htm#{{contractID}}"> {{contractID}}</a><br>
-	{{firstName}} {{lastName}}<br>
-	{{startDate}} to {{endDate}}</li>
+    <li w3-repeat="contracts"><a href="viewcontract.htm#{{contractID}}"> <br>Contract#{{contractID}}</a><br>
+	Caregiver ID: {{caregiverID}}<br>
+	Recipient ID: {{recipientID}}<br>
+	{{startDate}} to {{endDate}}<br>
+	Approved?: {{approved}}</li>
   </ul>
   <script>
-    myObject = {"contracts":[
-        {"contractID" : "0", "firstName":"Ham", "lastName":"Ster", "startDate":"1/1/2013", "endDate":"12/12/2050"},
-        {"contractID" : "1", "firstName":"Stam", "lastName":"Her", "startDate":"10/10/2020", "endDate":"1/2/3456"}]};
-    w3.displayObject("contractlist", myObject);
+    w3.displayObject("contractlist", contractList);
   </script>
   <p id="rating"></p>
     <div class=row>
       <div class=lcol>
-      	<ul id="ratingID"></ul>
+      	<ul id="ratingID">
+	  <li w3-repeat="reviews"><a href="viewreview.html#{{reviewID}}"> review#{{reviewID}}: </a></li>
+	</ul>
       </div>
       <div class=rcol>
-        <ul id="reviews"></ul>
+        <ul id="ratings">
+	  <li w3-repeat="reviews"> {{rating}}</li>
+	</ul>
       </div>
     </div>
 
   <script>
-    let reviewData = [5.0, 4.0, 5.0, 5.0, 4.5, 3.5, 4.5, 5.0, 5.0, 4.0];
-    let reviewIDs = [0,1,2,3,4,5,6,7,8,9];
-    let reviews = document.getElementById("reviews");
-    let rating = document.getElementById("rating");
-    let ratingID = document.getElementById("ratingID");
-    
+    w3.displayObject("ratingID", reviewList);
+    w3.displayObject("ratings", reviewList);
+
+    let rating = document.getElementById("rating");   
     let sum = 0;
-    for (i = 0; i < reviewData.length; i++) {
-      sum += reviewData[i];
+    for (i = 0; i < reviewList.reviews.length; i++) {
+      sum += reviewList.reviews[i].rating;
     }
-    reviewAvg = sum / reviewData.length;
+    reviewAvg = sum / reviewList.reviews.length;
     
    	rating.innerHTML = "<b>Your Rating: </b>" + reviewAvg;
     
-    for (i = 0; i < reviewData.length; ++i) {
-      let li = document.createElement('li');
-      let li2 = document.createElement('li');
-      li.innerHTML = "<a href='#" + reviewIDs[i] + "'>" + reviewIDs[i] + ": </a>";
-      li2.innerText = reviewData[i];
-      ratingID.appendChild(li);
-      reviews.appendChild(li2);
-    }
+    
   </script>
   
   <br>
