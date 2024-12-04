@@ -72,7 +72,7 @@
                             list.innerHTML = ''; // Clear the list before adding new items
                             for (var i = 0; i < recipients.length; i++) {
                                 var item = document.createElement('li');
-                                item.textContent = recipients[i].firstName + " " + recipients[i].lastName;
+                                item.textContent = recipients[i].fname + " " + recipients[i].lname;
                                 list.appendChild(item);
                             }
                         } else {
