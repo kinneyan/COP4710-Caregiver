@@ -74,21 +74,10 @@ function register() {
 function getUser() {
 
     const payload = JSON.stringify({ "id": userID });
-		return user = {
-			userID : 1,
-			firstName: "Ham",
-			lastName: "Ster",
-			address: "1234 Hamster Way",
-			email: "email@hamster.com",
-			phone: 123456790,
-			balance: 2000,
-			availableHours: 20,
-			dateCreated: "12/12/12",
-			lastLogin: "21/21/21"
-			};
+
     try
     {
-        $.post("http://localhost:8080/api/users/getUser.php", payload, function(data, status)
+        $.post("http://caregivers.kinneyan.com/api/users/getUser.php", payload, function(data, status)
         {
             if (data.id > 0) //Load user data into an object
             {
@@ -121,26 +110,50 @@ function getUser() {
     return false;
 }
 
+function createRecipient() {
+    const childID = userID;
+    const firstName = document.getElementById('fname').value;
+    const lastName = document.getElementById('lname').value;
+    const age = document.getElementById('age').value;
+    const address = document.getElementById('address').value;
+    const notes = document.getElementById('notes').value;
+
+
+    const payload = JSON.stringify({
+        "user_id": childID,
+        "fname": firstName,
+        "lname": lastName,
+        "age": age,
+        "address": address,
+	"notes": notes
+    });
+
+    try {
+        $.post("http://caregivers.kinneyan.com/api/recipients/createRecipient.php", payload, function(data, status) {
+            if (data.verdict === "New user created successfully.") {
+                // do stuff if registration is successful, take to new page or something
+		alert("Registration Successful!")
+                window.location.href = "profile.html";
+            } else {
+                alert("Registration failed. Please try again.");
+                return false;
+            }
+        });
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Registration failed');
+    }
+    return false;
+}
+
+
 function getRecipientsByUser() {
 
     const payload = JSON.stringify({ "user_id": userID });
-		var recipientList = {"recipients":[]};
-		for (let i = 0; i < 2; i++) {
-			recipientList.recipients.push({
-				userID: 100 + i,
-				firstName: "Momma",
-				lastName: "Ster",
-				age: 4,
-				address: "1111 Hamster Hovel",
-				notes: "Requires 3 sunflower seeds per day",
-				dateCreated: "12/12/12"
-			});
-				
-		}
-		return recipientList;
+
     try
     {
-        $.post("http://localhost:8080/api/recipients/getRecipientByUser.php", payload, function(data, status)
+        $.post("http://caregivers.kinneyan.com/api/recipients/getRecipientByUser.php", payload, function(data, status)
         {
             if (data.id > 0) //Load recipient data into an object list
             {
@@ -178,25 +191,10 @@ function getRecipientsByUser() {
 function getContractsByUser() {
 
     const payload = JSON.stringify({ "user_id": userID });
-		var contractList = {"contracts":[]};
-		for (let i = 0; i < 2; i++) {
-			contractList.contracts.push({
-				contractID: 1+i,
-				caregiverID: 1+i,
-				recipientID: 100+i,
-				startDate: "12/12/12",
-				endDate: "13/13/13",
-				hours: 24,
-				rate: 1,
-				approved: false
-			});
-				
-		}
-		return contractList;
 
     try
     {
-        $.post("http://localhost:8080/api/recipients/getContractsByUser.php", payload, function(data, status)
+        $.post("http://caregivers.kinneyan.com/api/recipients/getContractsByUser.php", payload, function(data, status)
         {
             if (data.id > 0) //Load contract data into an object list
             {
@@ -236,24 +234,9 @@ function getReviewsByCaregiver() {
 
     const payload = JSON.stringify({ "caregiver_id": userID });
 
-		var reviewList = {"reviews":[]};
-		for (let i = 0; i < 10; i++) {
-			reviewList.reviews.push({
-				reviewID: 1+i,
-				contractID: 12+i,
-				reviewerID: 1,
-				rating: (i*i+1)%6,
-				notes: "Great with Hamsters",
-				dateCreated: "1/1/2021",
-			});
-				
-		}
-		return reviewList;
-
-
     try
     {
-        $.post("http://localhost:8080/api/recipients/getReviewsByCaregiver.php", payload, function(data, status)
+        $.post("http://caregivers.kinneyan.com/api/recipients/getReviewsByCaregiver.php", payload, function(data, status)
         {
             if (data.id > 0) //Load review data into an object list
             {

@@ -1,7 +1,13 @@
 <html>
 <head>
 <link rel="stylesheet" href="css/style.css">
-<script src="w3.js"></script>
+<script type="text/javascript" src="js/user.js"></script>
+<script type="text/javascript" src="js/search.js"></script>
+<script type="text/javascript" src="js/cookie.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript"> document.addEventListener('DOMContentLoaded', function(){ getCookie();}, {once: true});</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="js/w3.js"></script>
 <style>
 ul {
   list-style-type: none;
@@ -10,7 +16,7 @@ ul {
 </head>
 <body>
 <div class="topnav">
-  <button class="navbutton" onclick="location.href='profile.html'" disabled>Profile</button>
+  <button class="navbutton" onclick="location.href='profile.html'">Profile</button>
   <button class="navbutton" onclick="location.href='search.html'">Search</button>
   <button class="navbutton" onclick="location.href='contract.html'">Contract</button>
 </div>
@@ -29,8 +35,7 @@ ul {
       Creation Date:<br>
       Start Date:<br>
       End Date:<br>
-      Review:<br>
-      Comments:<br>
+      Approved?:<br>
     </div>
     <div class=rcol>
       <div id="recipient">
@@ -50,32 +55,29 @@ ul {
       	{{hours}} <br>
         {{rate}} <br>
 	{{dateCreated}} <br>
-	{{dateStart}} <br>
-	{{dateEnd}} <br>
-      </div>
-      <div id="review">
-      	{{rating}} <br>
-        {{comments}}
+	{{startDate}} <br>
+	{{endDate}} <br>
+	{{approved}} <br>
       </div>
     </div>
   </div>
 
 
   <script>
-    var myObject= {"firstName" : "John", "lastName" : "Doe", "userID" : "0", "address" : "1234 Hamster Way"};
-    w3.displayObject("recipient", myObject);
+    contract = getContract();
+    w3.displayObject("contract", contract);
 
-    myObject= {"firstName" : "Van", "lastName" : "Gogh", "userID" : "0"};
-    w3.displayObject("employer", myObject);
+    recipientID = contract.recipientID;
+    recipient = getRecipient();
+    w3.displayObject("recipient", recipient);
+    
+    searchID = contract.employerID;
+    employer = searchUser();
+    w3.displayObject("employer", employer);
 
-    myObject= {"firstName" : "Ham", "lastName" : "Ster", "userID" : "1"};
-    w3.displayObject("caregiver", myObject);
-
-    myObject = {"hours" : "5", "rate" : "25", "dateCreated" : "12/12/2012", "dateStart" : "1/1/2013", "dateEnd" : "12/30/2050"};
-    w3.displayObject("contract", myObject);
-
-    myObject = {"rating" : "1", "comments" : "Terrible. Is an actual hamster."}
-    w3.displayObject("review", myObject);
+    searchID = contract.caregiverID;
+    caregiver = searchUser();
+    w3.displayObject("caregiver", caregiver);
   </script>
 
     

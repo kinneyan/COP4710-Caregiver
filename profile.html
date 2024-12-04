@@ -71,7 +71,7 @@ ul {
 
   <h2>Your Care Recipients</h2>
   <ul id="recipientlist">
-    <li w3-repeat="recipients"><a href="viewrecipient.html#{{userID}}"> <br>Recipient#{{userID}}</a><br>
+    <li w3-repeat="recipients"><br>Recipient#{{userID}}<br>
 	{{firstName}} {{lastName}}<br>
 	{{address}}<br>
 	Age: {{age}}<br>
@@ -86,7 +86,7 @@ ul {
   <br>
   <h2>Your Active Contracts</u2>
   <ul id="contractlist">
-    <li w3-repeat="contracts"><a href="viewcontract.htm#{{contractID}}"> <br>Contract#{{contractID}}</a><br>
+    <li w3-repeat="contracts"><a id="myLink" href="#" onclick="viewContract({{contractID}});return false;"> <br>Contract#{{contractID}}</a><br>
 	Caregiver ID: {{caregiverID}}<br>
 	Recipient ID: {{recipientID}}<br>
 	{{startDate}} to {{endDate}}<br>
@@ -96,33 +96,37 @@ ul {
     w3.displayObject("contractlist", contractList);
   </script>
   <p id="rating"></p>
-    <div class=row>
-      <div class=lcol>
-      	<ul id="ratingID">
-	  <li w3-repeat="reviews"><a href="viewreview.html#{{reviewID}}"> review#{{reviewID}}: </a></li>
-	</ul>
-      </div>
-      <div class=rcol>
-        <ul id="ratings">
-	  <li w3-repeat="reviews"> {{rating}}</li>
-	</ul>
-      </div>
-    </div>
-
+	<ul id="reviewlist">
+    		<li w3-repeat="reviews"><br>
+			Review#{{contractID}}</a><br>
+			Contract ID: {{contractID}}<br>
+			Reviewer ID: {{reviewerID}}<br>
+			Rating: {{rating}}<br>
+			Notes: {{notes}}
+			</li>
+  	</ul>
+	
   <script>
-    w3.displayObject("ratingID", reviewList);
-    w3.displayObject("ratings", reviewList);
+    w3.displayObject("reviewlist", reviewList);
 
     let rating = document.getElementById("rating");   
     let sum = 0;
     for (i = 0; i < reviewList.reviews.length; i++) {
       sum += reviewList.reviews[i].rating;
     }
-    reviewAvg = sum / reviewList.reviews.length;
+    if (reviewList.reviews.length > 0) {
+        reviewAvg = sum / reviewList.reviews.length;
+    }
+    else {
+        reviewAvg = 0;
+    }
+    rating.innerHTML = "<b>Your Rating: </b>" + reviewAvg;
     
-   	rating.innerHTML = "<b>Your Rating: </b>" + reviewAvg;
-    
-    
+    function viewContract(ID){
+      console.log(ID);
+      contractID = ID;
+      window.location.href = "viewcontract.html";
+    }
   </script>
   
   <br>

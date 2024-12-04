@@ -15,7 +15,7 @@ function searchUser() {
 			};
     try
     {
-        $.post("http://localhost:8080/api/users/getUser.php", payload, function(data, status)
+        $.post("http://caregivers.kinneyan.com/api/users/getUser.php", payload, function(data, status)
         {
             if (data.id > 0) //Load user data into an object
             {
@@ -67,7 +67,7 @@ function searchRecipientsByUser() {
 		return recipientList;
     try
     {
-        $.post("http://localhost:8080/api/recipients/getRecipientByUser.php", payload, function(data, status)
+        $.post("http://caregivers.kinneyan.com/api/recipients/getRecipientByUser.php", payload, function(data, status)
         {
             if (data.id > 0) //Load recipient data into an object list
             {
@@ -102,6 +102,41 @@ function searchRecipientsByUser() {
     return false;
 }
 
+function getRecipient() {
+
+    const payload = JSON.stringify({"id": recipientID});
+
+    try
+    {
+        $.post("http://caregivers.kinneyan.com/api/contracts/getRecipient.php", payload, function(data, status)
+        {
+            if (data.id > 0) {
+		var recipient = {
+			userID: data.id,
+			firstName: data.fname,
+			lastName: data.lname,
+			age: data.age,
+			address: data.address,
+			notes: data.notes,
+			childID: data.user_id,
+			dateCreated: data.date_created
+			};
+		return recipient;		
+	    }
+            else {
+                alert("An error has occurred");
+                return false;
+            }
+        });
+    }
+    catch(error)
+    {
+        console.error('Error:', error);
+        alert('Load failed');
+    }
+    return false;
+}
+
 
 function createContract() {
     const caregiverID = userID;
@@ -112,11 +147,18 @@ function createContract() {
     const hours = document.getElementById('hours').value;
     const rate = document.getElementById('rate').value;
 
-    const payload = JSON.stringify({ "caregiver_id": caregiverID, "hiring_user_id": hiringID, "recipient_id": recipientID, "start_date": startDate, "end_date": endDate, "daily_hours": hours, "rate": rate});
+    const payload = JSON.stringify({ 
+			"caregiver_id": caregiverID, 
+			"hiring_user_id": hiringID, 
+			"recipient_id": recipientID, 
+			"start_date": startDate, 
+			"end_date": endDate, 
+			"daily_hours": hours, 
+			"rate": rate});
 
     try
     {
-        $.post("http://localhost:8080/api/contracts/createContract.php", payload, function(data, status)
+        $.post("http://caregivers.kinneyan.com/api/contracts/createContract.php", payload, function(data, status)
         {
             if (!success) 
             {
@@ -128,8 +170,44 @@ function createContract() {
     catch(error)
     {
         console.error('Error:', error);
-        alert('Login failed');
+        alert('Contract failed');
     }
     return false;
 }
 
+function getContract() {
+
+    const payload = JSON.stringify({"id": contractID});
+
+    try
+    {
+        $.post("http://caregivers.kinneyan.com/api/contracts/getContract.php", payload, function(data, status)
+        {
+            if (data.id > 0) {
+		var contract = {
+			contractID: data.id,
+			caregiverID: data.caregiver_id,
+			employerID: data.hiring_user_id,
+			recipientID: data.recipient_id,
+			startDate: data.start_date,
+			endDate: data.end_date,
+			hours: data.daily_hours,
+			rate: data.rate,
+			approved: data.approved,
+			dateCreated: data.date_created
+			};
+		return contract;		
+	    }
+            else {
+                alert("An error has occurred");
+                return false;
+            }
+        });
+    }
+    catch(error)
+    {
+        console.error('Error:', error);
+        alert('Load failed');
+    }
+    return false;
+}

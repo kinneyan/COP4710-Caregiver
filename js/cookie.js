@@ -41,7 +41,7 @@ function getCookie()
     // verify restored information
     if (userId < 0)
     {
-        window.location.href = "login.html";
+      //window.location.href = "login.html";
     }
     else if(window.location.pathname != "/profile.html")
     {
