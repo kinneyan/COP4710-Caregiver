@@ -15,7 +15,8 @@ function login() {
         {
             if (data.id > 0)
             {
-                // do stuff if login is successful, take to new page or something
+		userID = data.id;
+                storeCookie();
                 window.location.href = "profile.html";
             }
             else 
