@@ -1,18 +1,7 @@
 function searchUser() {
 
     const payload = JSON.stringify({ "id": searchID });
-		return user = {
-			userID : 2,
-			firstName: "Bob",
-			lastName: "Cat",
-			address: "1234 Kitty Cove",
-			email: "email@kitties.com",
-			phone: 123456790,
-			balance: 2000,
-			availableHours: 20,
-			dateCreated: "12/12/12",
-			lastLogin: "21/21/21"
-			};
+
     try
     {
         $.post("http://caregivers.kinneyan.com/api/users/getUser.php", payload, function(data, status)
@@ -51,20 +40,7 @@ function searchUser() {
 function searchRecipientsByUser() {
 
     const payload = JSON.stringify({ "user_id": searchID });
-		var recipientList = {"recipients":[]};
-		for (let i = 0; i < 2; i++) {
-			recipientList.recipients.push({
-				userID: 100 + i,
-				firstName: "Daddy",
-				lastName: "Ster",
-				age: 14,
-				address: "1111 Lion's Den",
-				notes: "Requires 3 fish per day",
-				dateCreated: "12/12/12"
-			});
-				
-		}
-		return recipientList;
+
     try
     {
         $.post("http://caregivers.kinneyan.com/api/recipients/getRecipientByUser.php", payload, function(data, status)
