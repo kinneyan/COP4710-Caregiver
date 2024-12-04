@@ -57,7 +57,13 @@ function register() {
     try {
         $.post("http://localhost:8080/api/users/register.php", payload, function(data, status) {
             if (data.verdict === "New user created successfully.") {
-                // do stuff if registration is successful, take to new page or something
+                if (data.id > 0) {
+                    userID = data.id;
+                    storeCookie();
+                }
+                else {
+                    throw "Registration failed";
+                }
                 window.location.href = "profile.html";
             } else {
                 alert("Registration failed. Please try again.");
