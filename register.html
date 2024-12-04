@@ -1,15 +1,17 @@
 <html>
 <head>
 <link rel="stylesheet" href="css/style.css">
-<script src="w3.js"></script>
+<script type="text/javascript" src="js/user.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="js/w3.js"></script>
 </head>
 <body>
 <div class="topnav">
-<button class="navbutton" onclick="location.href='front.html'">Home</button>
+<button class="navbutton" onclick="location.href='index.html'">Home</button>
 </div>
 <h2>Register</h2>
 
-<form action="/register.php">
+<form onsubmit="return register();">
   <label for="username">Username:</label><br>
   <input type="text" id="username" name="username" value=""><br>
   <label for="password">Password</label><br>
@@ -36,7 +38,7 @@
   <label for="address">Address:</label><br>
   <input type="text" id="address" name="address" value="" style="width: 600px;"><br>
   <br><br>
-  <input type="submit" value="Submit">
+  <input type="submit" value="Create account">
 </form> 
 <br>
 Already have an account? Login <a href="login.html">here</a>
