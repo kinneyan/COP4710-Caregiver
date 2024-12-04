@@ -18,6 +18,7 @@ jobs:
         run: |
           cd ~/COP4710-Caregiver || git clone https://github.com/kinneyan/COP4710-Caregiver.git
           git pull
+          git reset --hard
           rm -r /var/www/html/*
           mv * /var/www/html
       
