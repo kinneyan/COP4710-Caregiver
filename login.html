@@ -1,7 +1,9 @@
 <html>
 <head>
 <link rel="stylesheet" href="css/style.css">
-<script src="w3.js"></script>
+<script type="text/javascript" src="js/user.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="js/w3.js"></script>
 </head>
 <body>
 <div class="topnav">
@@ -9,12 +11,12 @@
 </div>
 <h2>Login</h2>
 
-<form action="/login.php">
+<form onsubmit="return login();">
   <label for="username">Username:</label><br>
   <input type="text" id="username" name="username" value=""><br>
   <label for="password">Password:</label><br>
   <input type="password" id="password" name="password" value=""><br><br>
-  <input type="submit" value="Submit">
+  <button type="submit" id="submit-button" name="submit-button">Log in</button>
 </form> 
 
 If you don't have an account yet, register <a href="register.html">here</a>
