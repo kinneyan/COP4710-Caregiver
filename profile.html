@@ -1,131 +1,60 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<link rel="stylesheet" href="css/style.css">
-<script src="w3.js"></script>
-<style>
-ul {
-  list-style-type: none;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="css/navbar.css">
+    <style>
+        ul {
+            list-style-type: none;
+        }
+        .container {
+            padding: 20px;
+        }
+        .profile-info, .linked-recipients, .active-contracts, .average-rating {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .profile-info h2, .linked-recipients h2, .active-contracts h2, .average-rating h2 {
+            margin-top: 0;
+        }
+        .profile-info p, .linked-recipients p, .active-contracts p, .average-rating p {
+            margin: 5px 0;
+        }
+    </style>
 </head>
 <body>
-<div class="topnav">
-  <button class="navbutton" onclick="location.href='profile.html'" disabled>Profile</button>
-  <button class="navbutton" onclick="location.href='search.html'">Search</button>
-  <button class="navbutton" onclick="location.href='contract.html'">Contract</button>
-</div>
-<h1>Profile</h1>
-  <div class=row>
-    <div class=lcol>
-      Name:<br>
-      User ID:<br>
-      Address:<br>
-      Email:<br>
-      Phone Number:<br>
-      Current Balance:<br>
-      Remaining Hours:<br>
-      Registration Date:<br>
-      Previous Login:<br>
+    <div class="topnav">
+        <button class="navbutton disabled" onclick="location.href='profile.html'" disabled>Profile</button>
+        <button class="navbutton" onclick="location.href='search.html'">Search</button>
+        <button class="navbutton" onclick="location.href='contract.html'">Contract</button>
     </div>
-    <div class=rcol>
-      <div id="name">
-        {{firstName}} {{lastName}} <br>
-        {{userID}}
-      </div>
-      <div id="address">
-      	{{address}}
-      </div>
-      <div id="contact">
-      	{{email}} <br>
-        {{phone}}
-      </div>
-      <div id="account">
-      	{{balance}} <br>
-        {{availableHours}} <br>
-        {{dateCreated}} <br>
-        {{lastLogin}}
-      </div>
+    <div class="container">
+        <div class="profile-info">
+            <h2>User Information</h2>
+            <p><strong>Name:</strong> <span id="userName"></span></p>
+            <p><strong>ID:</strong> <span id="userId"></span></p>
+            <p><strong>Address:</strong> <span id="userAddress"></span></p>
+            <p><strong>Email:</strong> <span id="userEmail"></span></p>
+            <p><strong>Phone:</strong> <span id="userPhone"></span></p>
+            <p><strong>Current Balance:</strong> <span id="userBalance"></span></p>
+        </div>
+        <div class="linked-recipients">
+            <h2>Linked Care Recipients</h2>
+            <ul id="recipientsList"></ul>
+        </div>
+        <div class="active-contracts">
+            <h2>Active Contracts</h2>
+            <ul id="contractsList"></ul>
+        </div>
+        <div class="average-rating">
+            <h2>Current Average Rating</h2>
+            <p id="userRating"></p>
+        </div>
     </div>
-  </div>
-
-
-  <script>
-    var myObject= {"firstName" : "John", "lastName" : "Doe", "userID" : "0"};
-    w3.displayObject("name", myObject);
-
-    myObject = {"address" : "1234 Hamster Drive"};
-    w3.displayObject("address", myObject);
-
-    myObject = {"email" : "person@hamster.com", "phone" : "1234567890"};
-    w3.displayObject("contact", myObject);
-
-    myObject = {"balance" : "$2000", "availableHours" : "10", "dateCreated" : "12/12/2012", "lastLogin" : "12/12/2012"}
-    w3.displayObject("account", myObject);
-  </script>
-
-  <h2>Your Care Recipients</h2>
-  <ul id="recipients"></ul>
-  <script>
-    let data = ["Ma", "Pa"];
-    let list = document.getElementById("recipients");
-    for (i = 0; i < data.length; ++i) {
-      let li = document.createElement('li');
-      li.innerText = data[i];
-      list.appendChild(li);
-    }
-  </script>
-  <br>
-  <button class="navbutton" onclick="location.href='addrecipient.html'">Add Recipient</button>
-  <br>
-  <br>
-  <h2>Your Active Contracts</u2>
-  <ul id="contractlist">
-    <li w3-repeat="contracts"><a href="viewcontract.htm#{{contractID}}"> {{contractID}}</a><br>
-	{{firstName}} {{lastName}}<br>
-	{{startDate}} to {{endDate}}</li>
-  </ul>
-  <script>
-    myObject = {"contracts":[
-        {"contractID" : "0", "firstName":"Ham", "lastName":"Ster", "startDate":"1/1/2013", "endDate":"12/12/2050"},
-        {"contractID" : "1", "firstName":"Stam", "lastName":"Her", "startDate":"10/10/2020", "endDate":"1/2/3456"}]};
-    w3.displayObject("contractlist", myObject);
-  </script>
-  <p id="rating"></p>
-    <div class=row>
-      <div class=lcol>
-      	<ul id="ratingID"></ul>
-      </div>
-      <div class=rcol>
-        <ul id="reviews"></ul>
-      </div>
-    </div>
-
-  <script>
-    let reviewData = [5.0, 4.0, 5.0, 5.0, 4.5, 3.5, 4.5, 5.0, 5.0, 4.0];
-    let reviewIDs = [0,1,2,3,4,5,6,7,8,9];
-    let reviews = document.getElementById("reviews");
-    let rating = document.getElementById("rating");
-    let ratingID = document.getElementById("ratingID");
-    
-    let sum = 0;
-    for (i = 0; i < reviewData.length; i++) {
-      sum += reviewData[i];
-    }
-    reviewAvg = sum / reviewData.length;
-    
-   	rating.innerHTML = "<b>Your Rating: </b>" + reviewAvg;
-    
-    for (i = 0; i < reviewData.length; ++i) {
-      let li = document.createElement('li');
-      let li2 = document.createElement('li');
-      li.innerHTML = "<a href='#" + reviewIDs[i] + "'>" + reviewIDs[i] + ": </a>";
-      li2.innerText = reviewData[i];
-      ratingID.appendChild(li);
-      reviews.appendChild(li2);
-    }
-  </script>
-  
-  <br>
 </body>
 </html>
-

@@ -1,40 +1,42 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<link rel="stylesheet" href="css/style.css">
-<script src="w3.js"></script>
-<style>
-ul {
-  list-style-type: none;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search</title>
+    <link rel="stylesheet" href="css/navbar.css">
+    <style>
+        ul {
+            list-style-type: none;
+        }
+        .container {
+            padding: 20px;
+        }
+    </style>
+    <script src="w3.js"></script>
 </head>
 <body>
-
-
-
-<div class="topnav">
-  <button class="navbutton" onclick="location.href='profile.html'">Profile</button>
-  <button class="navbutton" onclick="location.href='search.html'" disabled>Search</button>
-  <button class="navbutton" onclick="location.href='contract.html'">Contract</button>
-</div>
-<br>
-
-  <h2>Search Caregivers</h2>
-
-  <ul id="search"><b>Caregivers<b></ul>
-  <script>
-    let data = ["Steve", "Alex"];
-    let cgID = [10, 11];
-    let list = document.getElementById("search");
-    for (i = 0; i < data.length; ++i) {
-      let li = document.createElement('li');
-      let link = document.createElement('a');
-      link.href = "profile.htm#" + cgID[i];
-      link.innerText = data[i];
-      li.appendChild(link);
-      list.appendChild(li);
-    }
-  </script>
-
+    <div class="topnav">
+        <button class="navbutton" onclick="location.href='profile.html'">Profile</button>
+        <button class="navbutton disabled" onclick="location.href='search.html'" disabled>Search</button>
+        <button class="navbutton" onclick="location.href='contract.html'">Contract</button>
+    </div>
+    <div class="container">
+        <h2>Search Caregivers</h2>
+        <ul id="search"><b>Caregivers</b></ul>
+    </div>
+    <script>
+        let data = ["Steve", "Alex"];
+        let cgID = [10, 11];
+        let list = document.getElementById("search");
+        for (let i = 0; i < data.length; ++i) {
+            let li = document.createElement('li');
+            let link = document.createElement('a');
+            link.href = "profile.html#" + cgID[i];
+            link.innerText = data[i];
+            li.appendChild(link);
+            list.appendChild(li);
+        }
+    </script>
 </body>
 </html>

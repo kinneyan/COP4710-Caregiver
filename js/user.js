@@ -11,7 +11,7 @@ function login() {
 
     try
     {
-        $.post("http://caregivers.kinneyan.com/api/users/login.php", payload, function(data, status)
+        $.post("http://localhost:8080/api/users/login.php", payload, function(data, status)
         {
             if (data.id > 0)
             {
@@ -55,7 +55,7 @@ function register() {
     });
 
     try {
-        $.post("http://caregivers.kinneyan.com/api/users/register.php", payload, function(data, status) {
+        $.post("http://localhost:8080/api/users/register.php", payload, function(data, status) {
             if (data.verdict === "New user created successfully.") {
                 // do stuff if registration is successful, take to new page or something
                 window.location.href = "profile.html";
