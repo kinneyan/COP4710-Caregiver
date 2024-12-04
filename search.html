@@ -12,6 +12,38 @@
         .container {
             padding: 20px;
         }
+        .search-box {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .search-box input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .search-box button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .search-box button:hover {
+            background-color: #45a049;
+        }
+        .search-results {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
     </style>
     <script src="w3.js"></script>
 </head>
@@ -22,20 +54,21 @@
         <button class="navbutton" onclick="location.href='contract.html'">Contract</button>
     </div>
     <div class="container">
-        <h2>Search Caregivers</h2>
-        <ul id="search"><b>Caregivers</b></ul>
+        <div class="search-box">
+            <h2>Search Caregivers</h2>
+            <input type="text" id="searchInput" placeholder="Enter caregiver name or ID">
+            <button onclick="searchCaregivers()">Search</button>
+        </div>
+        <div class="search-results" id="searchResults">
+            <!-- Search results will be populated here by JavaScript -->
+        </div>
     </div>
     <script>
-        let data = ["Steve", "Alex"];
-        let cgID = [10, 11];
-        let list = document.getElementById("search");
-        for (let i = 0; i < data.length; ++i) {
-            let li = document.createElement('li');
-            let link = document.createElement('a');
-            link.href = "profile.html#" + cgID[i];
-            link.innerText = data[i];
-            li.appendChild(link);
-            list.appendChild(li);
+        function searchCaregivers() {
+            // Placeholder function for search logic
+            const searchInput = document.getElementById('searchInput').value;
+            console.log('Searching for:', searchInput);
+            // Populate searchResults element with search results
         }
     </script>
 </body>
