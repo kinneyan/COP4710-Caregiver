@@ -16,7 +16,6 @@ function login() {
             if (data.id > 0)
             {
                 // do stuff if login is successful, take to new page or something
-                alert("Login successful");
                 window.location.href = "profile.html";
             }
             else 
