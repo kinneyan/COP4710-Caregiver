@@ -1,0 +1,48 @@
+<html>
+<head>
+<link rel="stylesheet" href="css/style.css">
+<script src="w3.js"></script>
+</head>
+<body>
+
+
+
+<div class="topnav">
+  <button class="navbutton" onclick="location.href='profile.html'">Profile</button>
+  <button class="navbutton" onclick="location.href='search.html'">Search</button>
+  <button class="navbutton" onclick="location.href='contract.html'" disabled>Contract</button>
+</div>
+<br>
+<h2>Create a New Contract</h2>
+<form action="/sendcontract.php">
+  <div class="row">
+    <label for="carerecipientid">Care Recipient ID:</label><br>
+    <input type="number" id="crid" name="crid" value=""><br><br>
+    <button>Find Recipient</button><br><br>
+    <label for="address">Address:</label><br>
+  	<br>
+    <br><br><br>
+  	<div class="column">
+      <label for="caregiverid">Caregiver ID:</label><br>
+      <input type="number" id="cgid" name="cgid" value=""><br>
+      <label for="hours">Hours per Week:</label><br>
+      <input type="number" id="hours" name="hours" value=""><br>
+      <label for="start">Start Date:</label><br>
+      <input type="date" id="start" name="start" value=""><br>
+  	</div>
+  	<div class="column">
+      <label for="cgname">Caregiver name:</label><br>
+      <br>
+      <label for="rate">Payment Rate (per hour):</label><br>
+      <input type="number" id="rate" name="rate" value=""><br>
+      <label for="end">End Date:</label><br>
+      <input type="date" id="end" name="end" value=""><br>
+  	</div>
+  </div>
+  <br><br>
+  <input type="submit" value="Submit">
+</form> 
+
+</body>
+</html>
+

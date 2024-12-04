@@ -1,0 +1,40 @@
+<html>
+<head>
+<link rel="stylesheet" href="css/style.css">
+<script src="w3.js"></script>
+<style>
+ul {
+  list-style-type: none;
+}
+</style>
+</head>
+<body>
+
+
+
+<div class="topnav">
+  <button class="navbutton" onclick="location.href='profile.html'">Profile</button>
+  <button class="navbutton" onclick="location.href='search.html'" disabled>Search</button>
+  <button class="navbutton" onclick="location.href='contract.html'">Contract</button>
+</div>
+<br>
+
+  <h2>Search Caregivers</h2>
+
+  <ul id="search"><b>Caregivers<b></ul>
+  <script>
+    let data = ["Steve", "Alex"];
+    let cgID = [10, 11];
+    let list = document.getElementById("search");
+    for (i = 0; i < data.length; ++i) {
+      let li = document.createElement('li');
+      let link = document.createElement('a');
+      link.href = "profile.htm#" + cgID[i];
+      link.innerText = data[i];
+      li.appendChild(link);
+      list.appendChild(li);
+    }
+  </script>
+
+</body>
+</html>

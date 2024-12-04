@@ -1,0 +1,85 @@
+<html>
+<head>
+<link rel="stylesheet" href="css/style.css">
+<script src="w3.js"></script>
+<style>
+ul {
+  list-style-type: none;
+}
+</style>
+</head>
+<body>
+<div class="topnav">
+  <button class="navbutton" onclick="location.href='profile.html'" disabled>Profile</button>
+  <button class="navbutton" onclick="location.href='search.html'">Search</button>
+  <button class="navbutton" onclick="location.href='contract.html'">Contract</button>
+</div>
+<h2>Contract</h2>
+  <div class=row>
+    <div class=lcol>
+      Recipient Name:<br>
+      Recipient ID:<br>
+      Address:<br>
+      Employer Name:<br>
+      Employer ID:<br>
+      Caregiver Name:<br>
+      Caregiver ID:<br>
+      Hours per Week:<br>
+      Rate (per Hour):<br>
+      Creation Date:<br>
+      Start Date:<br>
+      End Date:<br>
+      Review:<br>
+      Comments:<br>
+    </div>
+    <div class=rcol>
+      <div id="recipient">
+        {{firstName}} {{lastName}} <br>
+        {{userID}}<br>
+	{{address}}
+      </div>
+      <div id="employer">
+        {{firstName}} {{lastName}} <br>
+        {{userID}}<br>
+      </div>
+      <div id="caregiver">
+	{{firstName}} {{lastName}} <br>
+      	{{userID}}<br>
+      </div>
+      <div id="contract">
+      	{{hours}} <br>
+        {{rate}} <br>
+	{{dateCreated}} <br>
+	{{dateStart}} <br>
+	{{dateEnd}} <br>
+      </div>
+      <div id="review">
+      	{{rating}} <br>
+        {{comments}}
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    var myObject= {"firstName" : "John", "lastName" : "Doe", "userID" : "0", "address" : "1234 Hamster Way"};
+    w3.displayObject("recipient", myObject);
+
+    myObject= {"firstName" : "Van", "lastName" : "Gogh", "userID" : "0"};
+    w3.displayObject("employer", myObject);
+
+    myObject= {"firstName" : "Ham", "lastName" : "Ster", "userID" : "1"};
+    w3.displayObject("caregiver", myObject);
+
+    myObject = {"hours" : "5", "rate" : "25", "dateCreated" : "12/12/2012", "dateStart" : "1/1/2013", "dateEnd" : "12/30/2050"};
+    w3.displayObject("contract", myObject);
+
+    myObject = {"rating" : "1", "comments" : "Terrible. Is an actual hamster."}
+    w3.displayObject("review", myObject);
+  </script>
+
+    
+  <br>
+</body>
+</html>
+
