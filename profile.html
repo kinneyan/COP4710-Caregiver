@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
     <link rel="stylesheet" href="css/navbar.css">
+    <script src="js/main.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="js/cookie.js"></script>
     <style>
         ul {
@@ -30,6 +32,43 @@
             float: right;
         }
     </style>
+    <script type="text/javascript">
+        function getProfileInfo()
+        {
+            console.log(userID);
+            try
+            {
+                $.post("http://localhost:8080/api/users/getUser.php", JSON.stringify({ "id": userID }), function(data, status) {
+                    console.log(data);
+                    if (data.id > 0)
+                    {
+                        document.getElementById('userName').textContent = data.firstName + " " + data.lastName;
+                        document.getElementById('userEmail').textContent = data.email;
+                        document.getElementById('userAddress').textContent = data.address;
+                        document.getElementById('userPhone').textContent = data.phone;
+                        document.getElementById('userBalance').textContent = data.balance;
+                        document.getElementById('userId').textContent = data.id;
+                    }
+                    else 
+                    {
+                        alert("Failed to get profile info");
+                        return false;
+                    }
+                });
+            }
+            catch(error)
+            {
+                console.error('Error:', error);
+                alert('Failed to get profile info');
+            }
+            return false;
+        }
+
+        document.addEventListener('DOMContentLoaded', function(){
+            getCookie();
+            getProfileInfo();
+        }, {once: true});
+    </script>
 </head>
 <body>
     <div class="topnav">

@@ -4,12 +4,12 @@ function storeCookie()
     let expireMinutes = 30;
     let expireDate = new Date(currentDate.getTime() + expireMinutes * 60 * 1000);
 
-    document.cookie = "userId=" + userId + ",searchID=" + searchID + ",recipientID=" + recipientID + ",contractID=" + contractID + ";expires=" + expireDate.toGMTString();
+    document.cookie = "userID=" + userID + ";expires=" + expireDate.toGMTString();
 }
 
 function getCookie()
 {
-    userId = -1;
+    userID = -1;
     const cookie = document.cookie;
     const data = cookie.split(";")[0].split(",");
 
@@ -24,22 +24,10 @@ function getCookie()
         {
             userID = value;
         }
-        else if (key == "searchID")
-        {
-            searchID = value;
-        }
-        else if (key == "recipientID")
-        {
-            recipientID = value;
-        }
-        else if (key == "contractID")
-        {
-            contractID = value;
-        }
     }
 
     // verify restored information
-    if (userId < 0)
+    if (userID < 0)
     {
         window.location.href = "login.html";
     }

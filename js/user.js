@@ -15,7 +15,7 @@ function login() {
         {
             if (data.id > 0)
             {
-		userID = data.id;
+		        userID = data.id;
                 storeCookie();
                 window.location.href = "profile.html";
             }
