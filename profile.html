@@ -99,6 +99,14 @@
                             for (var i = 0; i < contracts.length; i++) {
                                 var item = document.createElement('li');
                                 item.textContent = "ID: " + contracts[i].id + " | Recipient: " + contracts[i].recipient_id + " | Start Date: " + contracts[i].start_date + " | End Date: " + contracts[i].end_date;
+                                if (!contracts[i].approved)
+                                {
+                                    item.textContent += " | Status: Pending";
+                                }
+                                else if (contracts[i].approved)
+                                {
+                                    item.textContent += " | Status: Approved";
+                                }
                                 list.appendChild(item);
                             }
                         } else {

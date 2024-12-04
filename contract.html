@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contract</title>
     <link rel="stylesheet" href="css/navbar.css">
+    <script src="js/main.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="js/cookie.js"></script>
     <style>
         .container {
@@ -44,6 +46,11 @@
         }
     </style>
     <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            getCookie();
+        }, {once: true});
+    </script>
+    <script>
         function validateForm() {
             const startDate = new Date(document.getElementById('start').value);
             const endDate = new Date(document.getElementById('end').value);
@@ -52,6 +59,46 @@
                 return false;
             }
             return true;
+        }
+
+        function createContact() {
+            event.preventDefault();
+
+            const validation = validateForm();
+            if (validateForm() === false) {
+                return false;
+            }
+
+            const caregiverId = document.getElementById('cgid').value;
+            const startDate = document.getElementById('start').value;
+            const endDate = document.getElementById('end').value;
+            const crid = document.getElementById('crid').value;
+            const rate = document.getElementById('rate').value;
+            const hours = document.getElementById('hours').value;
+
+            const data = {
+                caregiver_id: caregiverId,
+                hiring_user_id: userID,
+                start_date: startDate,
+                end_date: endDate,
+                recipient_id: crid,
+                rate: rate,
+                daily_hours: hours,
+            };
+
+            try {
+                $.post("http://localhost:8080/api/contracts/createContract.php", JSON.stringify(data), function(response, status) {
+                    if (response.success) {
+                        alert("Contract created successfully");
+                        window.location.href = "contract.html";
+                    } else {
+                        alert("Failed to create contract");
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to create contract');
+            }
         }
     </script>
 </head>
@@ -64,7 +111,7 @@
     </div>
     <div class="container">
         <h2>Create a New Contract</h2>
-        <form action="/sendcontract.php" onsubmit="return validateForm()">
+        <form onsubmit="return createContact(event);">
             <div class="form-group">
                 <label for="cgid">Caregiver ID:</label>
                 <input type="number" id="cgid" name="cgid" required>

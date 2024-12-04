@@ -31,10 +31,6 @@ function getCookie()
     {
         window.location.href = "login.html";
     }
-    else if(window.location.pathname != "/profile.html")
-    {
-      window.location.href = "profile.html";
-    }
 }
 
 function logout()
