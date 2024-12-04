@@ -44,6 +44,9 @@
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+        .topnav .logout-button {
+            float: right;
+        }
     </style>
     <script src="w3.js"></script>
 </head>
@@ -52,6 +55,7 @@
         <button class="navbutton" onclick="location.href='profile.html'">Profile</button>
         <button class="navbutton disabled" onclick="location.href='search.html'" disabled>Search</button>
         <button class="navbutton" onclick="location.href='contract.html'">Contract</button>
+        <button class="navbutton logout-button" onclick="logout()">Log Out</button>
     </div>
     <div class="container">
         <div class="search-box">
@@ -63,13 +67,5 @@
             <!-- Search results will be populated here by JavaScript -->
         </div>
     </div>
-    <script>
-        function searchCaregivers() {
-            // Placeholder function for search logic
-            const searchInput = document.getElementById('searchInput').value;
-            console.log('Searching for:', searchInput);
-            // Populate searchResults element with search results
-        }
-    </script>
 </body>
 </html>
