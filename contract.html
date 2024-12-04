@@ -44,12 +44,57 @@
         .topnav .logout-button {
             float: right;
         }
+        .toggle-button {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .toggle-button:hover {
+            background-color: #45a049;
+        }
+
+        .form-container {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            margin-bottom: 20px;
+        }
+        .approve-button {
+            background-color: #d3d3d3; /* Light grey */
+            border: none;
+            color: black;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .approve-button:hover {
+            background-color: #c0c0c0;
+        }
+
+        .contract-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
     </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function(){
-            getCookie();
-        }, {once: true});
-    </script>
     <script>
         function validateForm() {
             const startDate = new Date(document.getElementById('start').value);
@@ -90,7 +135,7 @@
                 $.post("http://localhost:8080/api/contracts/createContract.php", JSON.stringify(data), function(response, status) {
                     if (response.success) {
                         alert("Contract created successfully");
-                        window.location.href = "contract.html";
+                        window.location.reload();
                     } else {
                         alert("Failed to create contract");
                     }
@@ -98,6 +143,88 @@
             } catch (error) {
                 console.error('Error:', error);
                 alert('Failed to create contract');
+            }
+        }
+
+        function getPendingContracts() {
+            try {
+                $.post("http://localhost:8080/api/contracts/getContractsByUser.php", JSON.stringify({user_id: userID}), function(response, status) {
+                    if (response.success) {
+                        const contracts = response.data.contracts;
+                        const list = document.getElementById('tobeapproved');
+                        list.innerHTML = '';
+                        for (var i = 0; i < contracts.length; i++) {
+                            const contract = contracts[i];
+                            if (contract.approved === 1) continue;
+                            const item = document.createElement('li');
+                            item.className = 'contract-item';
+                            item.innerHTML = `Caregiver ID: ${contract.caregiver_id}, Start Date: ${contract.start_date}, End Date: ${contract.end_date}, Daily Hours: ${contract.daily_hours}, Payment Rate: ${contract.rate}`;
+                            
+                            const approveButton = document.createElement('button');
+                            approveButton.innerHTML = 'Approve';
+                            approveButton.className = 'approve-button';
+                            approveButton.onclick = function() {
+                                approveContract(contract.id);
+                            };
+                            
+                            item.appendChild(approveButton);
+                            list.appendChild(item);
+                        }
+                    } else {
+                        alert("Failed to get pending contracts");
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to get pending contracts');
+            }
+        }
+
+        function approveContract(contractId) {
+            body = {
+                id: contractId,
+                approved: 1,
+            };
+
+            console.log(body.id);
+
+            try 
+            {
+                $.post("http://localhost:8080/api/contracts/updateContract.php", JSON.stringify(body), function(response, status) {
+                    if (response.success) {
+                        window.location.reload();
+                    } else {
+                        alert("Failed to approve contract");
+                    }
+                });
+            }
+            catch (error) {
+                console.error('Error:', error);
+                alert('Failed to approve contract');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function(){
+            getCookie();
+            getPendingContracts();
+        }, {once: true});
+    </script>
+    <script>
+        function toggleContractForm() {
+            var form = document.getElementById("contract-form");
+            if (form.style.display === "none") {
+                form.style.display = "block";
+            } else {
+                form.style.display = "none";
+            }
+        }
+
+        function toggleApprovalList() {
+            var list = document.getElementById("approval-list");
+            if (list.style.display === "none") {
+                list.style.display = "block";
+            } else {
+                list.style.display = "none";
             }
         }
     </script>
@@ -109,37 +236,47 @@
         <button class="navbutton disabled" onclick="location.href='contract.html'" disabled>Contract</button>
         <button class="navbutton logout-button" onclick="logout()">Log Out</button>
     </div>
-    <div class="container">
+    <div id="create-contract" class="container">
         <h2>Create a New Contract</h2>
-        <form onsubmit="return createContact(event);">
-            <div class="form-group">
-                <label for="cgid">Caregiver ID:</label>
-                <input type="number" id="cgid" name="cgid" required>
-            </div>
-            <div class="form-group">
-                <label for="start">Start Date:</label>
-                <input type="date" id="start" name="start" required>
-            </div>
-            <div class="form-group">
-                <label for="end">End Date:</label>
-                <input type="date" id="end" name="end" required>
-            </div>
-            <div class="form-group">
-                <label for="hours">Daily Hours:</label>
-                <input type="number" id="hours" name="hours" required>
-            </div>
-            <div class="form-group">
-                <label for="crid">Care Recipient ID:</label>
-                <input type="number" id="crid" name="crid" required>
-            </div>
-            <div class="form-group">
-                <label for="rate">Payment Rate (per hour):</label>
-                <input type="number" id="rate" name="rate" required>
-            </div>
-            <div class="form-group">
-                <button type="submit">Submit</button>
-            </div>
-        </form>
+        <button class="toggle-button" onclick="toggleContractForm()">Show/hide Form</button>
+        <div class="form-container">
+            <form id="contract-form" onsubmit="return createContact(event);">
+                <div class="form-group">
+                    <label for="cgid">Caregiver ID:</label>
+                    <input type="number" id="cgid" name="cgid" required>
+                </div>
+                <div class="form-group">
+                    <label for="start">Start Date:</label>
+                    <input type="date" id="start" name="start" required>
+                </div>
+                <div class="form-group">
+                    <label for="end">End Date:</label>
+                    <input type="date" id="end" name="end" required>
+                </div>
+                <div class="form-group">
+                    <label for="hours">Daily Hours:</label>
+                    <input type="number" id="hours" name="hours" required>
+                </div>
+                <div class="form-group">
+                    <label for="crid">Care Recipient ID:</label>
+                    <input type="number" id="crid" name="crid" required>
+                </div>
+                <div class="form-group">
+                    <label for="rate">Payment Rate (per hour):</label>
+                    <input type="number" id="rate" name="rate" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="approval-section" class="container">
+        <h2>Contracts to be Approved</h2>
+        <button class="toggle-button" onclick="toggleApprovalList()">Show/hide List</button>
+        <div id="approval-list" class="form-container">
+            <ul id="tobeapproved"></ul>
+        </div>
     </div>
 </body>
 </html>
