@@ -5,8 +5,8 @@
 
     $data = json_decode(file_get_contents('php://input'), true);
 
-    $conn = new mysqli("localhost", "kinneyan", "test", "caregivers");
-
+    $conn = new mysqli("localhost", "caregiversapi", "api", "caregivers");
+        
     if ($conn->connect_error) {
         sendErrorResponse("Connection failed: " . $conn->connect_error);
         exit();
