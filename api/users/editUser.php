@@ -62,6 +62,11 @@
             $params[] = $data["available_hours"];
             $types .= "d";
         }
+        if (isset($data["balance"])) {
+            $fields[] = "balance=?";
+            $params[] = $data["balance"];
+            $types .= "d";
+        }
 
         // Ensure there are fields to update
         if (empty($fields)) {

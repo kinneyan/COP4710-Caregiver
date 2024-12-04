@@ -99,14 +99,29 @@
                             for (var i = 0; i < contracts.length; i++) {
                                 var item = document.createElement('li');
                                 item.textContent = "ID: " + contracts[i].id + " | Recipient: " + contracts[i].recipient_id + " | Start Date: " + contracts[i].start_date + " | End Date: " + contracts[i].end_date;
-                                if (!contracts[i].approved)
-                                {
+                                
+                                var currentDate = new Date();
+                                var endDate = new Date(contracts[i].end_date);
+
+                                // update contract status
+                                if (contracts[i].contract_total != undefined) {
+                                    item.textContent += " | Status: PAID";
+                                } else if (contracts[i].approved && endDate < currentDate) {
+                                    item.textContent += " | Status: Completed";
+                                    var processButton = document.createElement('button');
+                                    processButton.textContent = "Process";
+                                    (function(contract) {
+                                        processButton.onclick = function() {
+                                            processContract(contract);
+                                        };
+                                    })(contracts[i]);
+                                    item.appendChild(processButton);
+                                } else if (!contracts[i].approved) {
                                     item.textContent += " | Status: Pending";
-                                }
-                                else if (contracts[i].approved)
-                                {
+                                } else if (contracts[i].approved) {
                                     item.textContent += " | Status: Approved";
                                 }
+                                
                                 list.appendChild(item);
                             }
                         } else {
@@ -119,6 +134,77 @@
             } catch (error) {
                 console.error('Error:', error);
                 alert('Failed to get contracts');
+            }
+        }
+
+        function processContract(contract) {
+            // Calculate the total amount to be paid for the contract
+
+            var startDate = new Date(contract.start_date);
+            var endDate = new Date(contract.end_date);
+
+            // Calculate the difference in time
+            var timeDifference = endDate - startDate;
+
+            // Convert the time difference from milliseconds to days
+            var daysDifference = timeDifference / (1000 * 3600 * 24);
+
+            const total = daysDifference * contract.daily_hours * contract.rate;
+
+            // Update the user's balance
+            try {
+                // update the caregiver balance
+                // get current balance
+                $.post("http://localhost:8080/api/users/getUser.php", JSON.stringify({"id": contract.caregiver_id}), function(response, status) {
+                    if (response.id > 0) {
+                        // add the total amount to the current balance
+                        $.post("http://localhost:8080/api/users/editUser.php", JSON.stringify({"id": contract.caregiver_id, "balance": Number(response.balance) + Number(total)}), function(response, status) {
+                            if (!response.success) {
+                                alert("Failed to process contract1");
+                                console.log(response);
+                            }
+                        });
+                    } else {
+                        alert("Failed to process contract2");
+                        console.log(response);
+                    }
+                });
+                // get payee balance
+                $.post("http://localhost:8080/api/users/getUser.php", JSON.stringify({"id": contract.hiring_user_id}), function(response, status) {
+                    if (response.id > 0) {
+                        // subtract the total amount from the current balance
+                        $.post("http://localhost:8080/api/users/editUser.php", JSON.stringify({"id": contract.hiring_user_id, "balance": Number(response.balance) - Number(total)}), function(response, status) {
+                            if (!response.success) {
+                                alert("Failed to process contract3");
+                                console.log(response);
+                            } else {
+                                // Remove the process button and change the status to "PAID"
+                                var listItems = document.querySelectorAll('#contractsList li');
+                                listItems.forEach(function(listItem) {
+                                    if (listItem.textContent.includes('ID: ' + contract.id)) {
+                                        var processButton = listItem.querySelector('button');
+                                        if (processButton) {
+                                            listItem.removeChild(processButton);
+                                        }
+                                        listItem.textContent = listItem.textContent.replace('Status: Completed', 'Status: PAID');
+                                    }
+                                });
+                            }
+                        });
+                    } else {
+                        alert("Failed to process contract4");
+                        console.log(response);
+                    }
+                });
+                $.post("http://localhost:8080/api/contracts/UpdateContract.php", JSON.stringify({"id": contract.id, "total": total}), function(response, status) {
+                    if (!response.success) {
+                        alert("Failed to process contract5");
+                        console.log(response);
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to process contract');
             }
         }
 

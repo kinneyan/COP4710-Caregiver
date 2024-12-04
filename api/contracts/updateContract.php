@@ -46,6 +46,11 @@
         $params[] = $data['approved'];
         $types .= "i";
     }
+    if (isset($data['total'])) {
+        $fields[] = "contract_total = ?";
+        $params[] = $data['total'];
+        $types .= "d";
+    }
 
     if (empty($fields)) {
         sendErrorResponse("No fields to update.");
