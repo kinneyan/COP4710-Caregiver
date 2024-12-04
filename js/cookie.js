@@ -48,3 +48,14 @@ function getCookie()
       window.location.href = "profile.html";
     }
 }
+
+function logout()
+{
+    userId = -1;
+    searchID = -1;
+    recipientID = -1;
+    contractID = -1;
+    window.location.href = "index.html";
+    document.cookie = "";
+    return;
+}

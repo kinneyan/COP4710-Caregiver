@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
     <link rel="stylesheet" href="css/navbar.css">
+    <script src="js/cookie.js"></script>
     <style>
         ul {
             list-style-type: none;
@@ -35,7 +36,7 @@
         <button class="navbutton disabled" onclick="location.href='profile.html'" disabled>Profile</button>
         <button class="navbutton" onclick="location.href='search.html'">Search</button>
         <button class="navbutton" onclick="location.href='contract.html'">Contract</button>
-        <button class="navbutton logout-button" onclick="logout()">Log Out</button>
+        <button class="navbutton logout-button" onclick="return logout()">Log Out</button>
     </div>
     <div class="container">
         <div class="profile-info">
