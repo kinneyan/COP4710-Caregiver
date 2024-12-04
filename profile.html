@@ -35,11 +35,9 @@
     <script type="text/javascript">
         function getProfileInfo()
         {
-            console.log(userID);
             try
             {
                 $.post("http://localhost:8080/api/users/getUser.php", JSON.stringify({ "id": userID }), function(data, status) {
-                    console.log(data);
                     if (data.id > 0)
                     {
                         document.getElementById('userName').textContent = data.firstName + " " + data.lastName;
@@ -64,9 +62,36 @@
             return false;
         }
 
+        function getRecipients() {
+            try {
+                $.post("http://localhost:8080/api/recipients/getRecipientsByUser.php", JSON.stringify({ "user_id": userID }), function(response, status) {
+                    if (response.success) {
+                        var recipients = response.data.recipients;
+                        var list = document.getElementById('recipientsList');
+                        if (recipients.length > 0) {
+                            list.innerHTML = ''; // Clear the list before adding new items
+                            for (var i = 0; i < recipients.length; i++) {
+                                var item = document.createElement('li');
+                                item.textContent = recipients[i].firstName + " " + recipients[i].lastName;
+                                list.appendChild(item);
+                            }
+                        } else {
+                            list.innerHTML = '<li>No recipients linked</li>';
+                        }
+                    } else {
+                        alert("Failed to get recipients");
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to get recipients');
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function(){
             getCookie();
             getProfileInfo();
+            getRecipients();
         }, {once: true});
     </script>
 </head>
