@@ -170,6 +170,9 @@
                             item.appendChild(approveButton);
                             list.appendChild(item);
                         }
+                        if (list.innerHTML === '') {
+                            list.innerHTML = 'No contracts to be approved.';
+                        }
                     } else {
                         alert("Failed to get pending contracts");
                     }
