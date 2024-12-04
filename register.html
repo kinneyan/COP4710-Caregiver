@@ -1,0 +1,45 @@
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+<script src="w3.js"></script>
+</head>
+<body>
+<div class="topnav">
+<button class="navbutton" onclick="location.href='front.htm'">Home</button>
+</div>
+<h2>Register</h2>
+
+<form action="/register.php">
+  <label for="username">Username:</label><br>
+  <input type="text" id="username" name="username" value=""><br>
+  <label for="password">Password</label><br>
+  <input type="password" id="password" name="password" value=""><br><br>
+
+  
+  <div class="row">
+  	<div class="column">
+    <label for="fname">First Name:</label><br>
+    <input type="text" id="fname" name="fname" value=""><br>
+    <label for="email">Email:</label><br>
+    <input type="text" id="email" name="email" value=""><br>
+	<label for="hours">Hours Available per Week:</label><br>
+    <input type="number" id="hours" name="hours" value=""><br>
+  	</div>
+  	<div class="column">
+    <label for="lname">Last Name:</label><br>
+    <input type="text" id="lname" name="lname" value=""><br>
+    <label for="phone">Phone Number:</label><br>
+    <input type="text" id="phone" name="phone" value=""><br>
+  	</div>
+  </div>
+  <br>
+  <label for="address">Address:</label><br>
+  <input type="text" id="address" name="address" value="" style="width: 600px;"><br>
+  <br><br>
+  <input type="submit" value="Submit">
+</form> 
+<br>
+Already have an account? Login <a href="register.htm">here</a>
+</body>
+</html>
+
