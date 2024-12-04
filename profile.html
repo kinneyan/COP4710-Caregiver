@@ -88,10 +88,65 @@
             }
         }
 
+        function getContracts() {
+            try {
+                $.post("http://localhost:8080/api/contracts/getContractsByUser.php", JSON.stringify({ "user_id": userID }), function(response, status) {
+                    if (response.success) {
+                        var contracts = response.data.contracts;
+                        var list = document.getElementById('contractsList');
+                        if (contracts.length > 0) {
+                            list.innerHTML = ''; // Clear the list before adding new items
+                            for (var i = 0; i < contracts.length; i++) {
+                                var item = document.createElement('li');
+                                item.textContent = "ID: " + contracts[i].id + " | Recipient: " + contracts[i].recipient_id + " | Start Date: " + contracts[i].start_date + " | End Date: " + contracts[i].end_date;
+                                list.appendChild(item);
+                            }
+                        } else {
+                            list.innerHTML = '<li>No contracts found</li>';
+                        }
+                    } else {
+                        alert("Failed to get contracts");
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to get contracts');
+            }
+        }
+
+        function getReviews() {
+            try {
+                $.post("http://localhost:8080/api/reviews/getReviewsByUser.php", JSON.stringify({ "user_id": userID }), function(response, status) {
+                    if (response.success) {
+                        var reviews = response.data.reviews;
+                        var list = document.getElementById('userRating');
+                        if (reviews.length > 0) {
+                            list.innerHTML = ''; // Clear the list before adding new items
+                            var totalRating = 0;
+                            for (var i = 0; i < reviews.length; i++) {
+                                totalRating += reviews[i].rating;
+                            }
+                            var averageRating = totalRating / reviews.length;
+                            list.textContent = averageRating + " / 5";
+                        } else {
+                            list.innerHTML = 'No reviews found';
+                        }
+                    } else {
+                        alert("Failed to get reviews");
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to get reviews');
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function(){
             getCookie();
             getProfileInfo();
             getRecipients();
+            getContracts();
+            getReviews();
         }, {once: true});
     </script>
 </head>

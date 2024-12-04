@@ -33,11 +33,13 @@
     $conn->close();
 
     function sendSuccessResponse($data) {
+        header("Content-type: application/json");
         echo json_encode(["success" => true, "data" => $data]);
         exit();
     }
 
     function sendErrorResponse($error) {
+        header("Content-type: application/json");
         echo json_encode(["success" => false, "error" => $error]);
         exit();
     }
