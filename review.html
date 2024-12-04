@@ -1,0 +1,29 @@
+<html>
+<head>
+<link rel="stylesheet" href="css/style.css">
+<script src="w3.js"></script>
+</head>
+<body>
+
+
+
+<div class="topnav">
+  <button class="navbutton" onclick="location.href='profile.html'">Profile</button>
+  <button class="navbutton" onclick="location.href='search.html'">Search</button>
+  <button class="navbutton" onclick="location.href='contract.html'" disabled>Contract</button>
+</div>
+<br>
+<button class="navbutton" onclick="location.href='viewcontract.html'">Back</button>
+<h2>Leave a Review!</h2>
+<form action="/review.php">
+  <label for="rating">Rating:</label><br>
+  <input type="number" id="rating" name="rating" value=""><br>
+  <label for="notes">Comments:</label><br>
+  <textarea id="notes" name="notes" rows="5" cols="80"></textarea>
+  <br><br>
+  <input type="submit" value="Submit">
+</form> 
+
+</body>
+</html>
+
