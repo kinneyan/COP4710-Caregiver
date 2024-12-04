@@ -55,11 +55,24 @@
     );
 
     $res = $stmt2->execute();
+    if (!$res) {
+        returnWithVerdict("Database Error: " . $stmt2->error);
+        $stmt2->close();
+        $conn->close();
+        exit();
+    }
+
+    // get user id
+    $stmt3 = $conn->prepare("SELECT id FROM users WHERE username=?");
+    $stmt3->bind_param("s", $data["username"]);
+    $res = $stmt3->execute();
+    $result = $stmt3->get_result();
+    $id = $result->fetch_assoc()["id"];
 
     if ($res) {
-        returnWithVerdict("New user created successfully.");
+        returnWithVerdict("New user created successfully.", $id);
     } else {
-        returnWithVerdict("Database Error: " . $stmt2->error);
+        returnWithVerdict("Database Error: " . $stmt2->error, -1);
     }
 
     $stmt2->close();
@@ -71,8 +84,8 @@
         echo $obj;
     }
 
-    function returnWithVerdict($verdict) {
-        $retValue = json_encode(["verdict" => $verdict]);
+    function returnWithVerdict($verdict, $id) {
+        $retValue = json_encode(["verdict" => $verdict, "id" => $id]);
         sendResultInfoAsJson($retValue);
     }
 ?>

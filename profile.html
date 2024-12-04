@@ -1,131 +1,278 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<link rel="stylesheet" href="css/style.css">
-<script src="w3.js"></script>
-<style>
-ul {
-  list-style-type: none;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="css/navbar.css">
+    <script src="js/main.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="js/cookie.js"></script>
+    <style>
+        ul {
+            list-style-type: none;
+        }
+        .container {
+            padding: 20px;
+        }
+        .profile-info, .linked-recipients, .active-contracts, .average-rating {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .profile-info h2, .linked-recipients h2, .active-contracts h2, .average-rating h2 {
+            margin-top: 0;
+        }
+        .profile-info p, .linked-recipients p, .active-contracts p, .average-rating p {
+            margin: 5px 0;
+        }
+        .topnav .logout-button {
+            float: right;
+        }
+    </style>
+    <script type="text/javascript">
+        function getProfileInfo()
+        {
+            try
+            {
+                $.post("http://localhost:8080/api/users/getUser.php", JSON.stringify({ "id": userID }), function(data, status) {
+                    if (data.id > 0)
+                    {
+                        document.getElementById('userName').textContent = data.firstName + " " + data.lastName;
+                        document.getElementById('userEmail').textContent = data.email;
+                        document.getElementById('userAddress').textContent = data.address;
+                        document.getElementById('userPhone').textContent = data.phone;
+                        document.getElementById('userBalance').textContent = data.balance;
+                        document.getElementById('userId').textContent = data.id;
+                    }
+                    else 
+                    {
+                        alert("Failed to get profile info");
+                        return false;
+                    }
+                });
+            }
+            catch(error)
+            {
+                console.error('Error:', error);
+                alert('Failed to get profile info');
+            }
+            return false;
+        }
+
+        function getRecipients() {
+            try {
+                $.post("http://localhost:8080/api/recipients/getRecipientsByUser.php", JSON.stringify({ "user_id": userID }), function(response, status) {
+                    if (response.success) {
+                        var recipients = response.data.recipients;
+                        var list = document.getElementById('recipientsList');
+                        if (recipients.length > 0) {
+                            list.innerHTML = ''; // Clear the list before adding new items
+                            for (var i = 0; i < recipients.length; i++) {
+                                var item = document.createElement('li');
+                                item.textContent = recipients[i].fname + " " + recipients[i].lname;
+                                list.appendChild(item);
+                            }
+                        } else {
+                            list.innerHTML = '<li>No recipients linked</li>';
+                        }
+                    } else {
+                        alert("Failed to get recipients");
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to get recipients');
+            }
+        }
+
+        function getContracts() {
+            try {
+                $.post("http://localhost:8080/api/contracts/getContractsByUser.php", JSON.stringify({ "user_id": userID }), function(response, status) {
+                    if (response.success) {
+                        var contracts = response.data.contracts;
+                        var list = document.getElementById('contractsList');
+                        if (contracts.length > 0) {
+                            list.innerHTML = ''; // Clear the list before adding new items
+                            for (var i = 0; i < contracts.length; i++) {
+                                var item = document.createElement('li');
+                                item.textContent = "ID: " + contracts[i].id + " | Recipient: " + contracts[i].recipient_id + " | Start Date: " + contracts[i].start_date + " | End Date: " + contracts[i].end_date;
+                                
+                                var currentDate = new Date();
+                                var endDate = new Date(contracts[i].end_date);
+
+                                // update contract status
+                                if (contracts[i].contract_total != undefined) {
+                                    item.textContent += " | Status: PAID";
+                                } else if (contracts[i].approved && endDate < currentDate) {
+                                    item.textContent += " | Status: Completed";
+                                    var processButton = document.createElement('button');
+                                    processButton.textContent = "Process";
+                                    (function(contract) {
+                                        processButton.onclick = function() {
+                                            processContract(contract);
+                                        };
+                                    })(contracts[i]);
+                                    item.appendChild(processButton);
+                                } else if (!contracts[i].approved) {
+                                    item.textContent += " | Status: Pending";
+                                } else if (contracts[i].approved) {
+                                    item.textContent += " | Status: Approved";
+                                }
+                                
+                                list.appendChild(item);
+                            }
+                        } else {
+                            list.innerHTML = '<li>No contracts found</li>';
+                        }
+                    } else {
+                        alert("Failed to get contracts");
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to get contracts');
+            }
+        }
+
+        function processContract(contract) {
+            // Calculate the total amount to be paid for the contract
+
+            var startDate = new Date(contract.start_date);
+            var endDate = new Date(contract.end_date);
+
+            // Calculate the difference in time
+            var timeDifference = endDate - startDate;
+
+            // Convert the time difference from milliseconds to days
+            var daysDifference = timeDifference / (1000 * 3600 * 24);
+
+            const total = daysDifference * contract.daily_hours * contract.rate;
+
+            // Update the user's balance
+            try {
+                // update the caregiver balance
+                // get current balance
+                $.post("http://localhost:8080/api/users/getUser.php", JSON.stringify({"id": contract.caregiver_id}), function(response, status) {
+                    if (response.id > 0) {
+                        // add the total amount to the current balance
+                        $.post("http://localhost:8080/api/users/editUser.php", JSON.stringify({"id": contract.caregiver_id, "balance": Number(response.balance) + Number(total)}), function(response, status) {
+                            if (!response.success) {
+                                alert("Failed to process contract1");
+                                console.log(response);
+                            }
+                        });
+                    } else {
+                        alert("Failed to process contract2");
+                        console.log(response);
+                    }
+                });
+                // get payee balance
+                $.post("http://localhost:8080/api/users/getUser.php", JSON.stringify({"id": contract.hiring_user_id}), function(response, status) {
+                    if (response.id > 0) {
+                        // subtract the total amount from the current balance
+                        $.post("http://localhost:8080/api/users/editUser.php", JSON.stringify({"id": contract.hiring_user_id, "balance": Number(response.balance) - Number(total)}), function(response, status) {
+                            if (!response.success) {
+                                alert("Failed to process contract3");
+                                console.log(response);
+                            } else {
+                                // Remove the process button and change the status to "PAID"
+                                var listItems = document.querySelectorAll('#contractsList li');
+                                listItems.forEach(function(listItem) {
+                                    if (listItem.textContent.includes('ID: ' + contract.id)) {
+                                        var processButton = listItem.querySelector('button');
+                                        if (processButton) {
+                                            listItem.removeChild(processButton);
+                                        }
+                                        listItem.textContent = listItem.textContent.replace('Status: Completed', 'Status: PAID');
+                                    }
+                                });
+                            }
+                        });
+                    } else {
+                        alert("Failed to process contract4");
+                        console.log(response);
+                    }
+                });
+                $.post("http://localhost:8080/api/contracts/UpdateContract.php", JSON.stringify({"id": contract.id, "total": total}), function(response, status) {
+                    if (!response.success) {
+                        alert("Failed to process contract5");
+                        console.log(response);
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to process contract');
+            }
+        }
+
+        function getReviews() {
+            try {
+                $.post("http://localhost:8080/api/reviews/getReviewsByUser.php", JSON.stringify({ "user_id": userID }), function(response, status) {
+                    if (response.success) {
+                        var reviews = response.data.reviews;
+                        var list = document.getElementById('userRating');
+                        if (reviews.length > 0) {
+                            list.innerHTML = ''; // Clear the list before adding new items
+                            var totalRating = 0;
+                            for (var i = 0; i < reviews.length; i++) {
+                                totalRating += reviews[i].rating;
+                            }
+                            var averageRating = totalRating / reviews.length;
+                            list.textContent = averageRating + " / 5";
+                        } else {
+                            list.innerHTML = 'No reviews found';
+                        }
+                    } else {
+                        alert("Failed to get reviews");
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to get reviews');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function(){
+            getCookie();
+            getProfileInfo();
+            getRecipients();
+            getContracts();
+            getReviews();
+        }, {once: true});
+    </script>
 </head>
 <body>
-<div class="topnav">
-  <button class="navbutton" onclick="location.href='profile.html'" disabled>Profile</button>
-  <button class="navbutton" onclick="location.href='search.html'">Search</button>
-  <button class="navbutton" onclick="location.href='contract.html'">Contract</button>
-</div>
-<h1>Profile</h1>
-  <div class=row>
-    <div class=lcol>
-      Name:<br>
-      User ID:<br>
-      Address:<br>
-      Email:<br>
-      Phone Number:<br>
-      Current Balance:<br>
-      Remaining Hours:<br>
-      Registration Date:<br>
-      Previous Login:<br>
+    <div class="topnav">
+        <button class="navbutton disabled" onclick="location.href='profile.html'" disabled>Profile</button>
+        <button class="navbutton" onclick="location.href='search.html'">Search</button>
+        <button class="navbutton" onclick="location.href='contract.html'">Contract</button>
+        <button class="navbutton logout-button" onclick="return logout()">Log Out</button>
     </div>
-    <div class=rcol>
-      <div id="name">
-        {{firstName}} {{lastName}} <br>
-        {{userID}}
-      </div>
-      <div id="address">
-      	{{address}}
-      </div>
-      <div id="contact">
-      	{{email}} <br>
-        {{phone}}
-      </div>
-      <div id="account">
-      	{{balance}} <br>
-        {{availableHours}} <br>
-        {{dateCreated}} <br>
-        {{lastLogin}}
-      </div>
+    <div class="container">
+        <div class="profile-info">
+            <h2>User Information</h2>
+            <p><strong>Name:</strong> <span id="userName"></span></p>
+            <p><strong>ID:</strong> <span id="userId"></span></p>
+            <p><strong>Address:</strong> <span id="userAddress"></span></p>
+            <p><strong>Email:</strong> <span id="userEmail"></span></p>
+            <p><strong>Phone:</strong> <span id="userPhone"></span></p>
+            <p><strong>Current Balance:</strong> <span id="userBalance"></span></p>
+        </div>
+        <div class="linked-recipients">
+            <h2>Linked Care Recipients</h2>
+            <ul id="recipientsList"></ul>
+        </div>
+        <div class="active-contracts">
+            <h2>Active Contracts</h2>
+            <ul id="contractsList"></ul>
+        </div>
+        <div class="average-rating">
+            <h2>Current Average Rating</h2>
+            <p id="userRating"></p>
+        </div>
     </div>
-  </div>
-
-
-  <script>
-    var myObject= {"firstName" : "John", "lastName" : "Doe", "userID" : "0"};
-    w3.displayObject("name", myObject);
-
-    myObject = {"address" : "1234 Hamster Drive"};
-    w3.displayObject("address", myObject);
-
-    myObject = {"email" : "person@hamster.com", "phone" : "1234567890"};
-    w3.displayObject("contact", myObject);
-
-    myObject = {"balance" : "$2000", "availableHours" : "10", "dateCreated" : "12/12/2012", "lastLogin" : "12/12/2012"}
-    w3.displayObject("account", myObject);
-  </script>
-
-  <h2>Your Care Recipients</h2>
-  <ul id="recipients"></ul>
-  <script>
-    let data = ["Ma", "Pa"];
-    let list = document.getElementById("recipients");
-    for (i = 0; i < data.length; ++i) {
-      let li = document.createElement('li');
-      li.innerText = data[i];
-      list.appendChild(li);
-    }
-  </script>
-  <br>
-  <button class="navbutton" onclick="location.href='addrecipient.html'">Add Recipient</button>
-  <br>
-  <br>
-  <h2>Your Active Contracts</u2>
-  <ul id="contractlist">
-    <li w3-repeat="contracts"><a href="viewcontract.htm#{{contractID}}"> {{contractID}}</a><br>
-	{{firstName}} {{lastName}}<br>
-	{{startDate}} to {{endDate}}</li>
-  </ul>
-  <script>
-    myObject = {"contracts":[
-        {"contractID" : "0", "firstName":"Ham", "lastName":"Ster", "startDate":"1/1/2013", "endDate":"12/12/2050"},
-        {"contractID" : "1", "firstName":"Stam", "lastName":"Her", "startDate":"10/10/2020", "endDate":"1/2/3456"}]};
-    w3.displayObject("contractlist", myObject);
-  </script>
-  <p id="rating"></p>
-    <div class=row>
-      <div class=lcol>
-      	<ul id="ratingID"></ul>
-      </div>
-      <div class=rcol>
-        <ul id="reviews"></ul>
-      </div>
-    </div>
-
-  <script>
-    let reviewData = [5.0, 4.0, 5.0, 5.0, 4.5, 3.5, 4.5, 5.0, 5.0, 4.0];
-    let reviewIDs = [0,1,2,3,4,5,6,7,8,9];
-    let reviews = document.getElementById("reviews");
-    let rating = document.getElementById("rating");
-    let ratingID = document.getElementById("ratingID");
-    
-    let sum = 0;
-    for (i = 0; i < reviewData.length; i++) {
-      sum += reviewData[i];
-    }
-    reviewAvg = sum / reviewData.length;
-    
-   	rating.innerHTML = "<b>Your Rating: </b>" + reviewAvg;
-    
-    for (i = 0; i < reviewData.length; ++i) {
-      let li = document.createElement('li');
-      let li2 = document.createElement('li');
-      li.innerHTML = "<a href='#" + reviewIDs[i] + "'>" + reviewIDs[i] + ": </a>";
-      li2.innerText = reviewData[i];
-      ratingID.appendChild(li);
-      reviews.appendChild(li2);
-    }
-  </script>
-  
-  <br>
 </body>
 </html>
-

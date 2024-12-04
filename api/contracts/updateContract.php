@@ -5,8 +5,8 @@
 
     $data = json_decode(file_get_contents('php://input'), true);
 
-    $conn = new mysqli("localhost", "kinneyan", "test", "caregivers");
-
+    $conn = new mysqli("localhost", "caregiversapi", "api", "caregivers");
+    
     if ($conn->connect_error) {
         sendErrorResponse("Connection failed: " . $conn->connect_error);
         exit();
@@ -46,6 +46,11 @@
         $params[] = $data['approved'];
         $types .= "i";
     }
+    if (isset($data['total'])) {
+        $fields[] = "contract_total = ?";
+        $params[] = $data['total'];
+        $types .= "d";
+    }
 
     if (empty($fields)) {
         sendErrorResponse("No fields to update.");
@@ -73,11 +78,13 @@
     $conn->close();
 
     function sendSuccessResponse($message) {
+        header("Content-type: application/json");
         echo json_encode(["success" => true, "message" => $message]);
         exit();
     }
 
     function sendErrorResponse($error) {
+        header("Content-type: application/json");
         echo json_encode(["success" => false, "error" => $error]);
         exit();
     }

@@ -1,48 +1,285 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<link rel="stylesheet" href="css/style.css">
-<script src="w3.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contract</title>
+    <link rel="stylesheet" href="css/navbar.css">
+    <script src="js/main.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="js/cookie.js"></script>
+    <style>
+        .container {
+            padding: 20px;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .form-group button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+        .topnav .logout-button {
+            float: right;
+        }
+        .toggle-button {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .toggle-button:hover {
+            background-color: #45a049;
+        }
+
+        .form-container {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            margin-bottom: 20px;
+        }
+        .approve-button {
+            background-color: #d3d3d3; /* Light grey */
+            border: none;
+            color: black;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .approve-button:hover {
+            background-color: #c0c0c0;
+        }
+
+        .contract-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+    </style>
+    <script>
+        function validateForm() {
+            const startDate = new Date(document.getElementById('start').value);
+            const endDate = new Date(document.getElementById('end').value);
+            if (endDate <= startDate) {
+                alert('End date must be after the start date.');
+                return false;
+            }
+            return true;
+        }
+
+        function createContact() {
+            event.preventDefault();
+
+            const validation = validateForm();
+            if (validateForm() === false) {
+                return false;
+            }
+
+            const caregiverId = document.getElementById('cgid').value;
+            const startDate = document.getElementById('start').value;
+            const endDate = document.getElementById('end').value;
+            const crid = document.getElementById('crid').value;
+            const rate = document.getElementById('rate').value;
+            const hours = document.getElementById('hours').value;
+
+            const data = {
+                caregiver_id: caregiverId,
+                hiring_user_id: userID,
+                start_date: startDate,
+                end_date: endDate,
+                recipient_id: crid,
+                rate: rate,
+                daily_hours: hours,
+            };
+
+            try {
+                $.post("http://localhost:8080/api/contracts/createContract.php", JSON.stringify(data), function(response, status) {
+                    if (response.success) {
+                        alert("Contract created successfully");
+                        window.location.reload();
+                    } else {
+                        alert("Failed to create contract");
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to create contract');
+            }
+        }
+
+        function getPendingContracts() {
+            try {
+                $.post("http://localhost:8080/api/contracts/getContractsByUser.php", JSON.stringify({user_id: userID}), function(response, status) {
+                    if (response.success) {
+                        const contracts = response.data.contracts;
+                        const list = document.getElementById('tobeapproved');
+                        list.innerHTML = '';
+                        for (var i = 0; i < contracts.length; i++) {
+                            const contract = contracts[i];
+                            if (contract.approved === 1) continue;
+                            const item = document.createElement('li');
+                            item.className = 'contract-item';
+                            item.innerHTML = `Caregiver ID: ${contract.caregiver_id}, Start Date: ${contract.start_date}, End Date: ${contract.end_date}, Daily Hours: ${contract.daily_hours}, Payment Rate: ${contract.rate}`;
+                            
+                            const approveButton = document.createElement('button');
+                            approveButton.innerHTML = 'Approve';
+                            approveButton.className = 'approve-button';
+                            approveButton.onclick = function() {
+                                approveContract(contract.id);
+                            };
+                            
+                            item.appendChild(approveButton);
+                            list.appendChild(item);
+                        }
+                        if (list.innerHTML === '') {
+                            list.innerHTML = 'No contracts to be approved.';
+                        }
+                    } else {
+                        alert("Failed to get pending contracts");
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to get pending contracts');
+            }
+        }
+
+        function approveContract(contractId) {
+            body = {
+                id: contractId,
+                approved: 1,
+            };
+
+            console.log(body.id);
+
+            try 
+            {
+                $.post("http://localhost:8080/api/contracts/updateContract.php", JSON.stringify(body), function(response, status) {
+                    if (response.success) {
+                        window.location.reload();
+                    } else {
+                        alert("Failed to approve contract");
+                    }
+                });
+            }
+            catch (error) {
+                console.error('Error:', error);
+                alert('Failed to approve contract');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function(){
+            getCookie();
+            getPendingContracts();
+        }, {once: true});
+    </script>
+    <script>
+        function toggleContractForm() {
+            var form = document.getElementById("contract-form");
+            if (form.style.display === "none") {
+                form.style.display = "block";
+            } else {
+                form.style.display = "none";
+            }
+        }
+
+        function toggleApprovalList() {
+            var list = document.getElementById("approval-list");
+            if (list.style.display === "none") {
+                list.style.display = "block";
+            } else {
+                list.style.display = "none";
+            }
+        }
+    </script>
 </head>
 <body>
-
-
-
-<div class="topnav">
-  <button class="navbutton" onclick="location.href='profile.html'">Profile</button>
-  <button class="navbutton" onclick="location.href='search.html'">Search</button>
-  <button class="navbutton" onclick="location.href='contract.html'" disabled>Contract</button>
-</div>
-<br>
-<h2>Create a New Contract</h2>
-<form action="/sendcontract.php">
-  <div class="row">
-    <label for="carerecipientid">Care Recipient ID:</label><br>
-    <input type="number" id="crid" name="crid" value=""><br><br>
-    <button>Find Recipient</button><br><br>
-    <label for="address">Address:</label><br>
-  	<br>
-    <br><br><br>
-  	<div class="column">
-      <label for="caregiverid">Caregiver ID:</label><br>
-      <input type="number" id="cgid" name="cgid" value=""><br>
-      <label for="hours">Hours per Week:</label><br>
-      <input type="number" id="hours" name="hours" value=""><br>
-      <label for="start">Start Date:</label><br>
-      <input type="date" id="start" name="start" value=""><br>
-  	</div>
-  	<div class="column">
-      <label for="cgname">Caregiver name:</label><br>
-      <br>
-      <label for="rate">Payment Rate (per hour):</label><br>
-      <input type="number" id="rate" name="rate" value=""><br>
-      <label for="end">End Date:</label><br>
-      <input type="date" id="end" name="end" value=""><br>
-  	</div>
-  </div>
-  <br><br>
-  <input type="submit" value="Submit">
-</form> 
-
+    <div class="topnav">
+        <button class="navbutton" onclick="location.href='profile.html'">Profile</button>
+        <button class="navbutton" onclick="location.href='search.html'">Search</button>
+        <button class="navbutton disabled" onclick="location.href='contract.html'" disabled>Contract</button>
+        <button class="navbutton logout-button" onclick="logout()">Log Out</button>
+    </div>
+    <div id="create-contract" class="container">
+        <h2>Create a New Contract</h2>
+        <button class="toggle-button" onclick="toggleContractForm()">Show/hide Form</button>
+        <div class="form-container">
+            <form id="contract-form" onsubmit="return createContact(event);">
+                <div class="form-group">
+                    <label for="cgid">Caregiver ID:</label>
+                    <input type="number" id="cgid" name="cgid" required>
+                </div>
+                <div class="form-group">
+                    <label for="start">Start Date:</label>
+                    <input type="date" id="start" name="start" required>
+                </div>
+                <div class="form-group">
+                    <label for="end">End Date:</label>
+                    <input type="date" id="end" name="end" required>
+                </div>
+                <div class="form-group">
+                    <label for="hours">Daily Hours:</label>
+                    <input type="number" id="hours" name="hours" required>
+                </div>
+                <div class="form-group">
+                    <label for="crid">Care Recipient ID:</label>
+                    <input type="number" id="crid" name="crid" required>
+                </div>
+                <div class="form-group">
+                    <label for="rate">Payment Rate (per hour):</label>
+                    <input type="number" id="rate" name="rate" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="approval-section" class="container">
+        <h2>Contracts to be Approved</h2>
+        <button class="toggle-button" onclick="toggleApprovalList()">Show/hide List</button>
+        <div id="approval-list" class="form-container">
+            <ul id="tobeapproved"></ul>
+        </div>
+    </div>
 </body>
 </html>
-

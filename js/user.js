@@ -11,11 +11,11 @@ function login() {
 
     try
     {
-        $.post("http://caregivers.kinneyan.com/api/users/login.php", payload, function(data, status)
+        $.post("http://localhost:8080/api/users/login.php", payload, function(data, status)
         {
             if (data.id > 0)
             {
-		userID = data.id;
+		        userID = data.id;
                 storeCookie();
                 window.location.href = "profile.html";
             }
@@ -55,9 +55,15 @@ function register() {
     });
 
     try {
-        $.post("http://caregivers.kinneyan.com/api/users/register.php", payload, function(data, status) {
+        $.post("http://localhost:8080/api/users/register.php", payload, function(data, status) {
             if (data.verdict === "New user created successfully.") {
-                // do stuff if registration is successful, take to new page or something
+                if (data.id > 0) {
+                    userID = data.id;
+                    storeCookie();
+                }
+                else {
+                    throw "Registration failed";
+                }
                 window.location.href = "profile.html";
             } else {
                 alert("Registration failed. Please try again.");
