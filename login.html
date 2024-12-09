@@ -1,25 +1,89 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<link rel="stylesheet" href="css/style.css">
-<script type="text/javascript" src="js/user.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="js/w3.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            padding: 20px;
+        }
+        .login-box {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 50px auto;
+            max-width: 400px;
+        }
+        .login-box h2 {
+            margin-top: 0;
+        }
+        .login-box label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .login-box button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .login-box button:hover {
+            background-color: #45a049;
+        }
+        .login-box a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        .login-box a:hover {
+            text-decoration: underline;
+        }
+        .home-link {
+            display: block;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+    <script src="js/main.js"></script>
+    <script src="js/cookie.js"></script>
+    <script src="js/user.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="js/w3.js"></script>
 </head>
 <body>
-<div class="topnav">
-<button class="navbutton" onclick="location.href='front.html'">Home</button>
-</div>
-<h2>Login</h2>
-
-<form onsubmit="return login();">
-  <label for="username">Username:</label><br>
-  <input type="text" id="username" name="username" value=""><br>
-  <label for="password">Password:</label><br>
-  <input type="password" id="password" name="password" value=""><br><br>
-  <button type="submit" id="submit-button" name="submit-button">Log in</button>
-</form> 
-
-If you don't have an account yet, register <a href="register.html">here</a>
-
+    <div class="container">
+        <div class="home-link">
+            <a href="index.html">Home</a>
+        </div>
+        <div class="login-box">
+            <h2>Login</h2>
+            <form onsubmit="return login();">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                <button type="submit" id="submit-button" name="submit-button">Log in</button>
+            </form>
+            <p>If you don't have an account yet, register <a href="register.html">here</a></p>
+        </div>
+    </div>
 </body>
 </html>

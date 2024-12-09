@@ -1,40 +1,72 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<link rel="stylesheet" href="css/style.css">
-<script src="w3.js"></script>
-<style>
-ul {
-  list-style-type: none;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search</title>
+    <link rel="stylesheet" href="css/navbar.css">
+    <script src="js/cookie.js"></script>
+    <style>
+        ul {
+            list-style-type: none;
+        }
+        .container {
+            padding: 20px;
+        }
+        .search-box {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .search-box input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .search-box button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .search-box button:hover {
+            background-color: #45a049;
+        }
+        .search-results {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .topnav .logout-button {
+            float: right;
+        }
+    </style>
+    <script src="w3.js"></script>
 </head>
 <body>
-
-
-
-<div class="topnav">
-  <button class="navbutton" onclick="location.href='profile.html'">Profile</button>
-  <button class="navbutton" onclick="location.href='search.html'" disabled>Search</button>
-  <button class="navbutton" onclick="location.href='contract.html'">Contract</button>
-</div>
-<br>
-
-  <h2>Search Caregivers</h2>
-
-  <ul id="search"><b>Caregivers<b></ul>
-  <script>
-    let data = ["Steve", "Alex"];
-    let cgID = [10, 11];
-    let list = document.getElementById("search");
-    for (i = 0; i < data.length; ++i) {
-      let li = document.createElement('li');
-      let link = document.createElement('a');
-      link.href = "profile.htm#" + cgID[i];
-      link.innerText = data[i];
-      li.appendChild(link);
-      list.appendChild(li);
-    }
-  </script>
-
+    <div class="topnav">
+        <button class="navbutton" onclick="location.href='profile.html'">Profile</button>
+        <button class="navbutton disabled" onclick="location.href='search.html'" disabled>Search</button>
+        <button class="navbutton" onclick="location.href='contract.html'">Contract</button>
+        <button class="navbutton logout-button" onclick="logout()">Log Out</button>
+    </div>
+    <div class="container">
+        <div class="search-box">
+            <h2>Search Caregivers</h2>
+            <input type="text" id="searchInput" placeholder="Enter caregiver name or ID">
+            <button onclick="searchCaregivers()">Search</button>
+        </div>
+        <div class="search-results" id="searchResults">
+            <!-- Search results will be populated here by JavaScript -->
+        </div>
+    </div>
 </body>
 </html>
